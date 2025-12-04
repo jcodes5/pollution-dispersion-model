@@ -51,20 +51,37 @@ export interface DispersionResult {
 }
 
 /**
- * Simulation parameters request
+ * Hourly wind override for manual control
+ */
+export interface HourlyWindOverride {
+  hour: number;
+  windSpeed: number;
+  windDirection: number;
+}
+
+/**
+ * Enhanced simulation parameters request
  */
 export interface SimulationParams {
   latitude: number;
   longitude: number;
   emissionRate: number;
   sourceHeight: number;
-  stabilityClass: string;
+  stabilityClass?: string; // Optional if auto-mapping is enabled
   windSpeed?: number;
   windDirection?: number;
   stackDiameter?: number;
   exitVelocity?: number;
   duration: number;
   useAutoWeather: boolean;
+  autoMapStability?: boolean;
+  pollutantType: 'PM2.5' | 'PM10';
+  receptorHeight?: number;
+  gridSize?: 20 | 30 | 40 | 50;
+  depositionVelocity?: number;
+  mixingHeight?: number;
+  lossRate?: number;
+  hourlyWindOverrides?: HourlyWindOverride[];
 }
 
 /**
