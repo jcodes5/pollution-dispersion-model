@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { handleForecast } from "./routes/forecast";
+import { handleSimulate } from "./routes/simulate";
 
 export function createServer() {
   const app = express();
@@ -18,6 +20,10 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Pollutant Dispersion Simulator API routes
+  app.post("/api/forecast", handleForecast);
+  app.post("/api/simulate", handleSimulate);
 
   return app;
 }
