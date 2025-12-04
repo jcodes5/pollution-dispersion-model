@@ -75,31 +75,23 @@ export default function SimulatorControls({
           </h3>
           <div className="space-y-3">
             <div>
-              <Label className="text-sm text-muted-foreground">
-                Latitude
-              </Label>
+              <Label className="text-sm text-muted-foreground">Latitude</Label>
               <Input
                 type="number"
                 step="0.0001"
                 value={formData.latitude}
-                onChange={(e) =>
-                  handleInputChange("latitude", e.target.value)
-                }
+                onChange={(e) => handleInputChange("latitude", e.target.value)}
                 className="mt-1"
                 disabled={isLoading}
               />
             </div>
             <div>
-              <Label className="text-sm text-muted-foreground">
-                Longitude
-              </Label>
+              <Label className="text-sm text-muted-foreground">Longitude</Label>
               <Input
                 type="number"
                 step="0.0001"
                 value={formData.longitude}
-                onChange={(e) =>
-                  handleInputChange("longitude", e.target.value)
-                }
+                onChange={(e) => handleInputChange("longitude", e.target.value)}
                 className="mt-1"
                 disabled={isLoading}
               />
@@ -252,24 +244,12 @@ export default function SimulatorControls({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="A">
-                    A - Very Unstable
-                  </SelectItem>
-                  <SelectItem value="B">
-                    B - Unstable
-                  </SelectItem>
-                  <SelectItem value="C">
-                    C - Slightly Unstable
-                  </SelectItem>
-                  <SelectItem value="D">
-                    D - Neutral
-                  </SelectItem>
-                  <SelectItem value="E">
-                    E - Slightly Stable
-                  </SelectItem>
-                  <SelectItem value="F">
-                    F - Stable
-                  </SelectItem>
+                  <SelectItem value="A">A - Very Unstable</SelectItem>
+                  <SelectItem value="B">B - Unstable</SelectItem>
+                  <SelectItem value="C">C - Slightly Unstable</SelectItem>
+                  <SelectItem value="D">D - Neutral</SelectItem>
+                  <SelectItem value="E">E - Slightly Stable</SelectItem>
+                  <SelectItem value="F">F - Stable</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -291,9 +271,7 @@ export default function SimulatorControls({
               max="48"
               step="1"
               value={formData.duration}
-              onChange={(e) =>
-                handleInputChange("duration", e.target.value)
-              }
+              onChange={(e) => handleInputChange("duration", e.target.value)}
               className="mt-1"
               disabled={isLoading}
             />

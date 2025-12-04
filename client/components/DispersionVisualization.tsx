@@ -40,9 +40,7 @@ export default function DispersionVisualization({
   // Find max concentration for color scaling
   useEffect(() => {
     if (results.length === 0) return;
-    const max = Math.max(
-      ...results.map((r) => r.maxConcentration)
-    );
+    const max = Math.max(...results.map((r) => r.maxConcentration));
     setMaxValue(Math.max(max, 1));
   }, [results]);
 
@@ -117,12 +115,12 @@ export default function DispersionVisualization({
     ctx.moveTo(arrowX, arrowY);
     ctx.lineTo(
       arrowX + arrowSize * Math.cos(angle1),
-      arrowY + arrowSize * Math.sin(angle1)
+      arrowY + arrowSize * Math.sin(angle1),
     );
     ctx.moveTo(arrowX, arrowY);
     ctx.lineTo(
       arrowX + arrowSize * Math.cos(angle2),
-      arrowY + arrowSize * Math.sin(angle2)
+      arrowY + arrowSize * Math.sin(angle2),
     );
     ctx.stroke();
   }, [results, currentTimeIndex, maxValue]);
@@ -189,34 +187,44 @@ export default function DispersionVisualization({
 
         {/* Canvas */}
         <div className="border border-border rounded-lg overflow-hidden bg-white">
-          <canvas
-            ref={canvasRef}
-            width={600}
-            height={400}
-            className="w-full"
-          />
+          <canvas ref={canvasRef} width={600} height={400} className="w-full" />
         </div>
 
         {/* Color Legend */}
         <div className="grid grid-cols-5 gap-1 p-2 bg-muted/30 rounded">
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "rgb(144, 238, 144)" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "rgb(144, 238, 144)" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Low</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "rgb(255, 238, 0)" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "rgb(255, 238, 0)" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Mod</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "rgb(255, 132, 0)" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "rgb(255, 132, 0)" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Elev</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "rgb(255, 0, 0)" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "rgb(255, 0, 0)" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">High</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "rgb(139, 0, 0)" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "rgb(139, 0, 0)" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Crit</span>
           </div>
         </div>
@@ -295,7 +303,7 @@ export default function DispersionVisualization({
           <div>
             <span className="text-muted-foreground">Peak:</span>
             <span className="ml-2 font-semibold text-foreground">
-              {(currentResult.maxConcentration / maxValue * 100).toFixed(1)}%
+              {((currentResult.maxConcentration / maxValue) * 100).toFixed(1)}%
             </span>
           </div>
         </div>

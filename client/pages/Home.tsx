@@ -1,14 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  Wind,
-  Cloud,
-  TrendingUp,
-  Zap,
-  Map,
-  BarChart3,
-} from "lucide-react";
+import { Wind, Cloud, TrendingUp, Zap, Map, BarChart3 } from "lucide-react";
 
 export default function Home() {
   return (
@@ -24,8 +17,8 @@ export default function Home() {
                 </h1>
                 <p className="text-xl text-muted-foreground mt-4">
                   Forecast air pollutant spread with advanced Gaussian plume
-                  modeling. Integrate real-time meteorological data for
-                  accurate predictions up to 48 hours ahead.
+                  modeling. Integrate real-time meteorological data for accurate
+                  predictions up to 48 hours ahead.
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row pt-4">
@@ -231,10 +224,7 @@ export default function Home() {
               No setup required — begin immediately.
             </p>
             <Link to="/simulator">
-              <Button
-                size="lg"
-                className="bg-primary hover:bg-primary/90 mt-4"
-              >
+              <Button size="lg" className="bg-primary hover:bg-primary/90 mt-4">
                 Launch Simulator Now
               </Button>
             </Link>

@@ -67,7 +67,10 @@ export default function ConcentrationChart({
           className="h-80 w-full"
         >
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+            <LineChart
+              data={chartData}
+              margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+            >
               <CartesianGrid
                 strokeDasharray="3 3"
                 stroke="hsl(var(--border))"
@@ -78,7 +81,11 @@ export default function ConcentrationChart({
                 stroke="hsl(var(--muted-foreground))"
               />
               <YAxis
-                label={{ value: "Concentration (g/m³)", angle: -90, position: "insideLeft" }}
+                label={{
+                  value: "Concentration (g/m³)",
+                  angle: -90,
+                  position: "insideLeft",
+                }}
                 tick={{ fontSize: 12 }}
                 stroke="hsl(var(--muted-foreground))"
               />
@@ -134,14 +141,11 @@ export default function ConcentrationChart({
             <p className="text-xs text-muted-foreground">Peak Hour</p>
             <p className="text-lg font-bold text-foreground">
               Hour{" "}
-              {
-                chartData.reduce((maxIdx, d, idx) =>
-                  d.concentration >
-                  (chartData[maxIdx]?.concentration || 0)
-                    ? idx
-                    : maxIdx
-                )
-              }
+              {chartData.reduce((maxIdx, d, idx) =>
+                d.concentration > (chartData[maxIdx]?.concentration || 0)
+                  ? idx
+                  : maxIdx,
+              )}
             </p>
           </div>
         </div>

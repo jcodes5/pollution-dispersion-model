@@ -20,7 +20,7 @@ interface OpenMeteoResponse {
 export async function fetchForecast(
   latitude: number,
   longitude: number,
-  hours: number = 48
+  hours: number = 48,
 ): Promise<MeteoDataPoint[]> {
   try {
     // Open-Meteo provides up to 7 days of forecast
@@ -66,9 +66,7 @@ export async function fetchForecast(
  * Generate mock meteorological data for testing
  * This is used when API fails or for quick testing
  */
-export function generateMockForecast(
-  hours: number = 48
-): MeteoDataPoint[] {
+export function generateMockForecast(hours: number = 48): MeteoDataPoint[] {
   const data: MeteoDataPoint[] = [];
   const now = new Date();
 
@@ -101,9 +99,10 @@ export function generateMockForecast(
 /**
  * Validate forecast data
  */
-export function validateForecast(
-  data: MeteoDataPoint[]
-): { valid: boolean; errors: string[] } {
+export function validateForecast(data: MeteoDataPoint[]): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   if (!Array.isArray(data) || data.length === 0) {
@@ -117,7 +116,7 @@ export function validateForecast(
       errors.push(`Point ${index}: wind speed must be non-negative`);
     if (point.windDirection < 0 || point.windDirection > 360)
       errors.push(
-        `Point ${index}: wind direction must be between 0 and 360 degrees`
+        `Point ${index}: wind direction must be between 0 and 360 degrees`,
       );
   });
 

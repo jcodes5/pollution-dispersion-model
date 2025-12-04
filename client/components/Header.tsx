@@ -31,7 +31,7 @@ export default function Header({ currentPath = "/" }: HeaderProps) {
               "px-3 py-2 text-sm font-medium rounded-md transition-colors",
               currentPath === "/"
                 ? "bg-primary text-primary-foreground"
-                : "text-foreground hover:bg-muted"
+                : "text-foreground hover:bg-muted",
             )}
           >
             Home
@@ -42,7 +42,7 @@ export default function Header({ currentPath = "/" }: HeaderProps) {
               "px-3 py-2 text-sm font-medium rounded-md transition-colors",
               currentPath === "/simulator"
                 ? "bg-primary text-primary-foreground"
-                : "text-foreground hover:bg-muted"
+                : "text-foreground hover:bg-muted",
             )}
           >
             Simulator

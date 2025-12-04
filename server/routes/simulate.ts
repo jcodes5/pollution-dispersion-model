@@ -1,5 +1,9 @@
 import { RequestHandler } from "express";
-import { SimulationParams, SimulationResponse, MeteoDataPoint } from "@shared/api";
+import {
+  SimulationParams,
+  SimulationResponse,
+  MeteoDataPoint,
+} from "@shared/api";
 import { runSimulation } from "../utils/gaussian-plume";
 import { fetchForecast, generateMockForecast } from "../utils/open-meteo";
 
@@ -96,7 +100,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
         forecastData = await fetchForecast(
           params.latitude,
           params.longitude,
-          params.duration
+          params.duration,
         );
       } catch (error) {
         console.warn("Open-Meteo API failed, using mock data:", error);
@@ -118,8 +122,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
             peakHour: 0,
             averageConcentration: 0,
           },
-          error:
-            "Manual weather mode requires windSpeed and windDirection",
+          error: "Manual weather mode requires windSpeed and windDirection",
         } as SimulationResponse);
       }
 
@@ -144,7 +147,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       params.sourceHeight,
       params.stabilityClass,
       params.latitude,
-      params.longitude
+      params.longitude,
     );
 
     return res.status(200).json({

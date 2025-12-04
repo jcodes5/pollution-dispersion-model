@@ -30,7 +30,7 @@ interface GaussianParams {
  */
 function calculateDispersionParams(
   distance: number,
-  stabilityClass: string
+  stabilityClass: string,
 ): { sigma_y: number; sigma_z: number } {
   const params = STABILITY_PARAMS[stabilityClass] || STABILITY_PARAMS.D;
 
@@ -57,7 +57,7 @@ function calculateConcentration(
   x: number,
   y: number,
   z: number,
-  params: GaussianParams
+  params: GaussianParams,
 ): number {
   const { Q, u, H, stabilityClass } = params;
 
@@ -86,7 +86,7 @@ export function generateConcentrationGrid(
   gridSize: number,
   gridSpacing: number,
   params: GaussianParams,
-  receptorHeight: number = 1.5 // breathing height
+  receptorHeight: number = 1.5, // breathing height
 ): {
   grid: number[][];
   x_points: number[];
@@ -115,7 +115,7 @@ export function generateConcentrationGrid(
         x,
         y,
         receptorHeight,
-        params
+        params,
       );
       row.push(concentration);
       maxConcentration = Math.max(maxConcentration, concentration);
@@ -132,7 +132,7 @@ export function generateConcentrationGrid(
 function rotateCoordinates(
   x: number,
   y: number,
-  windDirection: number
+  windDirection: number,
 ): { rotated_x: number; rotated_y: number } {
   // Wind direction is in degrees, convert to radians
   // Wind direction 0° = North, 90° = East, etc.
@@ -157,7 +157,7 @@ export function simulateTimeStep(
   sourceHeight: number,
   stabilityClass: string,
   latitude: number,
-  longitude: number
+  longitude: number,
 ): DispersionResult {
   const params: GaussianParams = {
     Q: emissionRate,
@@ -178,7 +178,7 @@ export function simulateTimeStep(
     generateConcentrationGrid(
       gridConfig.gridSize,
       gridConfig.gridSpacing,
-      params
+      params,
     );
 
   return {
@@ -201,7 +201,7 @@ export function runSimulation(
   sourceHeight: number,
   stabilityClass: string,
   latitude: number,
-  longitude: number
+  longitude: number,
 ): {
   results: DispersionResult[];
   stats: {
@@ -224,7 +224,7 @@ export function runSimulation(
       sourceHeight,
       stabilityClass,
       latitude,
-      longitude
+      longitude,
     );
 
     result.hour = index;

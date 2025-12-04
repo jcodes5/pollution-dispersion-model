@@ -46,9 +46,7 @@ export default function ConcentrationTable({
   return (
     <Card className="p-6">
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">
-          Hourly Results
-        </h2>
+        <h2 className="text-2xl font-bold text-foreground">Hourly Results</h2>
 
         <ScrollArea className="h-96 border border-border rounded-lg">
           <Table>
@@ -56,9 +54,7 @@ export default function ConcentrationTable({
               <TableRow>
                 <TableHead className="w-20">Hour</TableHead>
                 <TableHead>Time</TableHead>
-                <TableHead className="text-right">
-                  Max Conc. (g/m³)
-                </TableHead>
+                <TableHead className="text-right">Max Conc. (g/m³)</TableHead>
                 <TableHead className="text-right">Wind Speed (m/s)</TableHead>
                 <TableHead className="text-right">Wind Dir. (°)</TableHead>
                 <TableHead className="w-24">Peak</TableHead>
@@ -81,9 +77,7 @@ export default function ConcentrationTable({
                 return (
                   <TableRow
                     key={index}
-                    className={
-                      isPeak ? "bg-accent/10 hover:bg-accent/20" : ""
-                    }
+                    className={isPeak ? "bg-accent/10 hover:bg-accent/20" : ""}
                   >
                     <TableCell className="font-semibold text-foreground">
                       {index + 1}
@@ -123,7 +117,9 @@ export default function ConcentrationTable({
             <p className="text-2xl font-bold text-foreground mt-1">
               {maxConcentration.toFixed(4)}
             </p>
-            <p className="text-xs text-muted-foreground">g/m³ at Hour {peakHour + 1}</p>
+            <p className="text-xs text-muted-foreground">
+              g/m³ at Hour {peakHour + 1}
+            </p>
           </div>
           <div className="p-3 bg-secondary/10 rounded">
             <p className="text-xs font-semibold text-secondary uppercase">
