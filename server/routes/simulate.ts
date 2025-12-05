@@ -5,7 +5,15 @@ import {
   MeteoDataPoint,
 } from "@shared/api";
 import { runSimulation } from "../utils/gaussian-plume";
-import { fetchForecast, generateMockForecast } from "../utils/open-meteo";
+import {
+  fetchForecast,
+  generateMockForecast,
+} from "../utils/open-meteo";
+import { mapToStabilityClass } from "../utils/stability-mapping";
+import {
+  getCachedForecast,
+  setCachedForecast,
+} from "../utils/forecast-cache";
 
 export const handleSimulate: RequestHandler = async (req, res) => {
   try {
@@ -17,7 +25,6 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       typeof params.longitude !== "number" ||
       typeof params.emissionRate !== "number" ||
       typeof params.sourceHeight !== "number" ||
-      typeof params.stabilityClass !== "string" ||
       typeof params.duration !== "number"
     ) {
       return res.status(400).json({
@@ -62,21 +69,6 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       } as SimulationResponse);
     }
 
-    const validStabilityClasses = ["A", "B", "C", "D", "E", "F"];
-    if (!validStabilityClasses.includes(params.stabilityClass)) {
-      return res.status(400).json({
-        success: false,
-        results: [],
-        stats: {
-          peakConcentration: 0,
-          peakTime: "",
-          peakHour: 0,
-          averageConcentration: 0,
-        },
-        error: "Stability class must be A, B, C, D, E, or F",
-      } as SimulationResponse);
-    }
-
     if (params.duration < 1 || params.duration > 168) {
       return res.status(400).json({
         success: false,
@@ -91,24 +83,46 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       } as SimulationResponse);
     }
 
+    const pollutantType = params.pollutantType || "PM2.5";
+    const receptorHeight = params.receptorHeight || 1.5;
+    const gridSize = params.gridSize || 40;
+    const gridSpacing = params.gridSize ? 5000 / params.gridSize : 100;
+
+    // Get deposition velocity based on pollutant type and user override
+    let depositonVelocity = params.depositionVelocity;
+    if (!depositonVelocity) {
+      depositonVelocity =
+        pollutantType === "PM10" ? 0.01 : 0.002;
+    }
+
+    const mixingHeight = params.mixingHeight || 500;
+    const lossRate = params.lossRate || 0;
+
     // Fetch meteorological data
     let forecastData: MeteoDataPoint[];
 
     if (params.useAutoWeather) {
-      // Fetch from Open-Meteo
-      try {
-        forecastData = await fetchForecast(
-          params.latitude,
-          params.longitude,
-          params.duration,
-        );
-      } catch (error) {
-        console.warn("Open-Meteo API failed, using mock data:", error);
-        // Fall back to mock data
-        forecastData = generateMockForecast(params.duration);
+      // Check cache first
+      forecastData = getCachedForecast(params.latitude, params.longitude);
+
+      if (!forecastData) {
+        // Cache miss - fetch from API
+        try {
+          forecastData = await fetchForecast(
+            params.latitude,
+            params.longitude,
+            params.duration
+          );
+          // Store in cache
+          setCachedForecast(params.latitude, params.longitude, forecastData);
+        } catch (error) {
+          console.warn("Open-Meteo API failed, using mock data:", error);
+          // Fall back to mock data
+          forecastData = generateMockForecast(params.duration);
+        }
       }
     } else {
-      // Use manual wind input
+      // Use manual wind input or override
       if (
         typeof params.windSpeed !== "number" ||
         typeof params.windDirection !== "number"
@@ -122,7 +136,8 @@ export const handleSimulate: RequestHandler = async (req, res) => {
             peakHour: 0,
             averageConcentration: 0,
           },
-          error: "Manual weather mode requires windSpeed and windDirection",
+          error:
+            "Manual weather mode requires windSpeed and windDirection",
         } as SimulationResponse);
       }
 
@@ -140,14 +155,50 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       }
     }
 
+    // Apply hourly wind overrides if provided
+    if (params.hourlyWindOverrides && params.hourlyWindOverrides.length > 0) {
+      const overrideMap = new Map(
+        params.hourlyWindOverrides.map((o) => [o.hour, o])
+      );
+      forecastData = forecastData.map((data, index) => {
+        const override = overrideMap.get(index);
+        if (override) {
+          return {
+            ...data,
+            windSpeed: override.windSpeed,
+            windDirection: override.windDirection,
+          };
+        }
+        return data;
+      });
+    }
+
+    // Determine stability class
+    let stabilityClass = params.stabilityClass || "D";
+
+    if (params.autoMapStability) {
+      // Auto-map stability class based on meteorological conditions
+      stabilityClass = mapToStabilityClass({
+        hour: new Date(forecastData[0].time).getUTCHours(),
+        windSpeed: forecastData[0].windSpeed,
+        cloudCover: 50, // Default if not available
+      }).class;
+    }
+
     // Run simulation
     const simulation = runSimulation(
       forecastData,
       params.emissionRate,
       params.sourceHeight,
-      params.stabilityClass,
+      stabilityClass,
       params.latitude,
       params.longitude,
+      gridSize,
+      gridSpacing,
+      receptorHeight,
+      depositonVelocity,
+      mixingHeight,
+      lossRate
     );
 
     return res.status(200).json({
