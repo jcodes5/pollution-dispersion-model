@@ -103,7 +103,7 @@ export default function Simulator() {
               </TabsContent>
 
               <TabsContent value="table" className="mt-4">
-                <ConcentrationTable
+                <ReceptorTable
                   results={results}
                   isLoading={simulateMutation.isPending}
                 />
