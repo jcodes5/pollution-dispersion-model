@@ -11,6 +11,8 @@ export const handleSimulate: RequestHandler = async (req, res) => {
   try {
     const params = req.body as SimulationParams;
 
+    console.log("Received simulation params:", params);
+
     // Validate input
     if (
       typeof params.latitude !== "number" ||
@@ -20,6 +22,14 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       typeof params.stabilityClass !== "string" ||
       typeof params.duration !== "number"
     ) {
+      console.error("Invalid params:", {
+        latitude: typeof params.latitude,
+        longitude: typeof params.longitude,
+        emissionRate: typeof params.emissionRate,
+        sourceHeight: typeof params.sourceHeight,
+        stabilityClass: typeof params.stabilityClass,
+        duration: typeof params.duration,
+      });
       return res.status(400).json({
         success: false,
         results: [],
@@ -33,8 +43,8 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       } as SimulationResponse);
     }
 
-    // Validate parameters
-    if (params.emissionRate < 0) {
+    // Validate latitude
+    if (typeof params.latitude !== "number" || isNaN(params.latitude)) {
       return res.status(400).json({
         success: false,
         results: [],
@@ -44,11 +54,11 @@ export const handleSimulate: RequestHandler = async (req, res) => {
           peakHour: 0,
           averageConcentration: 0,
         },
-        error: "Emission rate must be non-negative",
+        error: "Latitude must be a valid number",
       } as SimulationResponse);
     }
 
-    if (params.sourceHeight < 0) {
+    if (params.latitude < -90 || params.latitude > 90) {
       return res.status(400).json({
         success: false,
         results: [],
@@ -58,7 +68,36 @@ export const handleSimulate: RequestHandler = async (req, res) => {
           peakHour: 0,
           averageConcentration: 0,
         },
-        error: "Source height must be non-negative",
+        error: "Latitude must be between -90 and 90",
+      } as SimulationResponse);
+    }
+
+    // Validate longitude
+    if (typeof params.longitude !== "number" || isNaN(params.longitude)) {
+      return res.status(400).json({
+        success: false,
+        results: [],
+        stats: {
+          peakConcentration: 0,
+          peakTime: "",
+          peakHour: 0,
+          averageConcentration: 0,
+        },
+        error: "Longitude must be a valid number",
+      } as SimulationResponse);
+    }
+
+    if (params.longitude < -180 || params.longitude > 180) {
+      return res.status(400).json({
+        success: false,
+        results: [],
+        stats: {
+          peakConcentration: 0,
+          peakTime: "",
+          peakHour: 0,
+          averageConcentration: 0,
+        },
+        error: "Longitude must be between -180 and 180",
       } as SimulationResponse);
     }
 

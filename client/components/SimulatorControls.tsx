@@ -38,10 +38,20 @@ export default function SimulatorControls({
   });
 
   const handleInputChange = (field: string, value: string | number) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: typeof value === "string" ? parseFloat(value) : value,
-    }));
+    setFormData((prev) => {
+      // Keep stabilityClass as a string
+      if (field === "stabilityClass") {
+        return {
+          ...prev,
+          [field]: value as string,
+        };
+      }
+      // Convert numeric fields to numbers
+      return {
+        ...prev,
+        [field]: typeof value === "string" ? parseFloat(value) : value,
+      };
+    });
   };
 
   const handleSubmit = () => {
@@ -50,14 +60,17 @@ export default function SimulatorControls({
       longitude: formData.longitude,
       emissionRate: formData.emissionRate,
       sourceHeight: formData.sourceHeight,
-      stabilityClass: formData.stabilityClass,
-      windSpeed: formData.windSpeed,
-      windDirection: formData.windDirection,
-      stackDiameter: formData.stackDiameter,
-      exitVelocity: formData.exitVelocity,
+      stabilityClass: formData.stabilityClass || "D",
       duration: formData.duration,
       useAutoWeather,
     };
+
+    // Only include wind parameters if not using auto weather
+    if (!useAutoWeather) {
+      params.windSpeed = formData.windSpeed;
+      params.windDirection = formData.windDirection;
+    }
+
     onSimulate(params);
   };
 
@@ -234,14 +247,14 @@ export default function SimulatorControls({
                 Stability Class
               </Label>
               <Select
-                value={formData.stabilityClass}
+                value={formData.stabilityClass || "D"}
                 onValueChange={(value) =>
                   handleInputChange("stabilityClass", value)
                 }
                 disabled={isLoading}
               >
                 <SelectTrigger className="mt-1">
-                  <SelectValue />
+                  <SelectValue placeholder="Select stability class" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="A">A - Very Unstable</SelectItem>

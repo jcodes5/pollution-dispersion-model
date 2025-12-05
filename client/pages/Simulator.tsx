@@ -18,6 +18,7 @@ export default function Simulator() {
 
   const simulateMutation = useMutation({
     mutationFn: async (params: SimulationParams) => {
+      console.log("Sending params:", params);
       const response = await fetch("/api/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -25,7 +26,11 @@ export default function Simulator() {
       });
 
       if (!response.ok) {
-        throw new Error("Simulation failed");
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Response error:", errorData);
+        throw new Error(
+          errorData.error || `HTTP ${response.status}: Simulation failed`,
+        );
       }
 
       const data: SimulationResponse = await response.json();
