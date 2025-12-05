@@ -6,7 +6,7 @@ import {
   DispersionResult,
 } from "@shared/api";
 import SimulatorControls from "@/components/SimulatorControls";
-import DispersionVisualization from "@/components/DispersionVisualization";
+import DispersionMap from "@/components/DispersionMap";
 import ConcentrationChart from "@/components/ConcentrationChart";
 import ReceptorTable from "@/components/ReceptorTable";
 import { useToast } from "@/hooks/use-toast";
@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Simulator() {
   const [results, setResults] = useState<DispersionResult[]>([]);
+  const [lastParams, setLastParams] = useState<SimulationParams | null>(null);
   const { toast } = useToast();
 
   const simulateMutation = useMutation({
