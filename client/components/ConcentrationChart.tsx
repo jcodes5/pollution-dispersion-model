@@ -50,6 +50,14 @@ export default function ConcentrationChart({
     );
   }
 
+  const TooltipContent = (props: any) => (
+    <ChartTooltipContent
+      {...props}
+      className="bg-background border border-border"
+      indicator="line"
+    />
+  );
+
   return (
     <Card className="p-6">
       <div className="space-y-4">
@@ -90,12 +98,7 @@ export default function ConcentrationChart({
                 stroke="hsl(var(--muted-foreground))"
               />
               <Tooltip
-                content={
-                  <ChartTooltipContent
-                    className="bg-background border border-border"
-                    indicator="line"
-                  />
-                }
+                content={TooltipContent}
                 cursor={{ stroke: "hsl(var(--primary))", strokeWidth: 1 }}
               />
               <Legend />
