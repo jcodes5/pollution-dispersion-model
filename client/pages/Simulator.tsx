@@ -40,7 +40,7 @@ export default function Simulator() {
       setResults(data.results);
       toast({
         title: "Simulation Complete",
-        description: `Peak concentration: ${data.stats.peakConcentration.toFixed(4)} g/m³ at ${data.stats.peakTime}`,
+        description: `Peak concentration: ${data.stats.peakConcentration.toFixed(4)} µg/m³ at ${data.stats.peakTime}`,
       });
     },
     onError: (error) => {
