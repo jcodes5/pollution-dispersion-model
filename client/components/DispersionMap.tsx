@@ -6,14 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause, RotateCcw } from "lucide-react";
 import L from "leaflet";
 
-// Load Leaflet CSS via CDN
-useEffect(() => {
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
-  document.head.appendChild(link);
-}, []);
-
 interface DispersionMapProps {
   results: DispersionResult[];
   latitude: number;
