@@ -91,10 +91,14 @@ export default function Simulator() {
               </TabsList>
 
               <TabsContent value="visualization" className="mt-4">
-                <DispersionVisualization
-                  results={results}
-                  isLoading={simulateMutation.isPending}
-                />
+                {lastParams && (
+                  <DispersionMap
+                    results={results}
+                    latitude={lastParams.latitude}
+                    longitude={lastParams.longitude}
+                    isLoading={simulateMutation.isPending}
+                  />
+                )}
               </TabsContent>
 
               <TabsContent value="timeseries" className="mt-4">
