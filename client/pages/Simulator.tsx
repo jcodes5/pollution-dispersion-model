@@ -8,7 +8,7 @@ import {
 import SimulatorControls from "@/components/SimulatorControls";
 import DispersionVisualization from "@/components/DispersionVisualization";
 import ConcentrationChart from "@/components/ConcentrationChart";
-import ConcentrationTable from "@/components/ConcentrationTable";
+import ReceptorTable from "@/components/ReceptorTable";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
