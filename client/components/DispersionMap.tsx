@@ -43,6 +43,19 @@ export default function DispersionMap({
   const sourceMarkerRef = useRef<L.Marker | null>(null);
   const windArrowsRef = useRef<L.Polyline[]>([]);
 
+  // Load Leaflet CSS
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+    document.head.appendChild(link);
+    return () => {
+      if (document.head.contains(link)) {
+        document.head.removeChild(link);
+      }
+    };
+  }, []);
+
   // Initialize map
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
