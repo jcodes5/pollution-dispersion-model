@@ -5,15 +5,9 @@ import {
   MeteoDataPoint,
 } from "@shared/api";
 import { runSimulation } from "../utils/gaussian-plume";
-import {
-  fetchForecast,
-  generateMockForecast,
-} from "../utils/open-meteo";
+import { fetchForecast, generateMockForecast } from "../utils/open-meteo";
 import { mapToStabilityClass } from "../utils/stability-mapping";
-import {
-  getCachedForecast,
-  setCachedForecast,
-} from "../utils/forecast-cache";
+import { getCachedForecast, setCachedForecast } from "../utils/forecast-cache";
 
 export const handleSimulate: RequestHandler = async (req, res) => {
   try {
@@ -91,8 +85,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
     // Get deposition velocity based on pollutant type and user override
     let depositonVelocity = params.depositionVelocity;
     if (!depositonVelocity) {
-      depositonVelocity =
-        pollutantType === "PM10" ? 0.01 : 0.002;
+      depositonVelocity = pollutantType === "PM10" ? 0.01 : 0.002;
     }
 
     const mixingHeight = params.mixingHeight || 500;
@@ -111,7 +104,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
           forecastData = await fetchForecast(
             params.latitude,
             params.longitude,
-            params.duration
+            params.duration,
           );
           // Store in cache
           setCachedForecast(params.latitude, params.longitude, forecastData);
@@ -136,8 +129,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
             peakHour: 0,
             averageConcentration: 0,
           },
-          error:
-            "Manual weather mode requires windSpeed and windDirection",
+          error: "Manual weather mode requires windSpeed and windDirection",
         } as SimulationResponse);
       }
 
@@ -158,7 +150,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
     // Apply hourly wind overrides if provided
     if (params.hourlyWindOverrides && params.hourlyWindOverrides.length > 0) {
       const overrideMap = new Map(
-        params.hourlyWindOverrides.map((o) => [o.hour, o])
+        params.hourlyWindOverrides.map((o) => [o.hour, o]),
       );
       forecastData = forecastData.map((data, index) => {
         const override = overrideMap.get(index);
@@ -198,7 +190,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       receptorHeight,
       depositonVelocity,
       mixingHeight,
-      lossRate
+      lossRate,
     );
 
     return res.status(200).json({

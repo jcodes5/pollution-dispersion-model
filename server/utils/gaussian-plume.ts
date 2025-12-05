@@ -1,7 +1,5 @@
 import { DispersionResult, MeteoDataPoint } from "@shared/api";
-import {
-  getPasquillGiffordCoefficients,
-} from "./stability-mapping";
+import { getPasquillGiffordCoefficients } from "./stability-mapping";
 
 /**
  * Enhanced Gaussian Plume Model Implementation
@@ -40,7 +38,7 @@ function convertToDownwindFrame(
   receiverLon: number,
   sourceLat: number,
   sourceLon: number,
-  windDirection: number
+  windDirection: number,
 ): { x: number; y: number } {
   // Simple distance calculation (Euclidean, valid for small distances)
   const deltaLat = (receiverLat - sourceLat) * 111000; // 1 degree lat ≈ 111 km
@@ -68,7 +66,7 @@ function convertToDownwindFrame(
  */
 function calculateDispersionParams(
   distance: number,
-  stabilityClass: string
+  stabilityClass: string,
 ): { sigma_y: number; sigma_z: number } {
   const coeffs = getPasquillGiffordCoefficients(stabilityClass);
 
@@ -94,7 +92,7 @@ function calculateConcentration(
   x: number,
   y: number,
   z: number,
-  params: GaussianParams
+  params: GaussianParams,
 ): number {
   const { Q, u, H, stabilityClass } = params;
 
@@ -125,7 +123,7 @@ function applyDecay(
   timeSeconds: number,
   depositionVelocity: number = 0.002,
   mixingHeight: number = 500,
-  lossRate: number = 0
+  lossRate: number = 0,
 ): number {
   const decayRate = depositionVelocity / mixingHeight + lossRate;
   return concentration * Math.exp(-decayRate * timeSeconds);
@@ -140,7 +138,7 @@ export function generateConcentrationGrid(
   params: GaussianParams,
   sourceLat: number,
   sourceLon: number,
-  receptorHeight: number = 1.5
+  receptorHeight: number = 1.5,
 ): {
   grid: number[][];
   x_points: number[];
@@ -171,7 +169,7 @@ export function generateConcentrationGrid(
         x,
         y,
         receptorHeight,
-        params
+        params,
       );
       row.push(concentration);
       maxConcentration = Math.max(maxConcentration, concentration);
@@ -197,7 +195,7 @@ export function simulateTimeStep(
   receptorHeight: number = 1.5,
   depositionVelocity: number = 0.002,
   mixingHeight: number = 500,
-  lossRate: number = 0
+  lossRate: number = 0,
 ): DispersionResult {
   const params: GaussianParams = {
     Q: emissionRate,
@@ -220,7 +218,7 @@ export function simulateTimeStep(
       params,
       latitude,
       longitude,
-      receptorHeight
+      receptorHeight,
     );
 
   return {
@@ -250,7 +248,7 @@ export function runSimulation(
   receptorHeight: number = 1.5,
   depositionVelocity: number = 0.002,
   mixingHeight: number = 500,
-  lossRate: number = 0
+  lossRate: number = 0,
 ): {
   results: DispersionResult[];
   stats: {
@@ -283,7 +281,7 @@ export function runSimulation(
       receptorHeight,
       depositionVelocity,
       mixingHeight,
-      lossRate
+      lossRate,
     );
 
     // Apply decay to concentration
@@ -292,7 +290,7 @@ export function runSimulation(
       cumulativeTime,
       depositionVelocity,
       mixingHeight,
-      lossRate
+      lossRate,
     );
 
     result.hour = index;
@@ -307,9 +305,9 @@ export function runSimulation(
             cumulativeTime,
             depositionVelocity,
             mixingHeight,
-            lossRate
-          ) * c // Apply proportional decay
-      )
+            lossRate,
+          ) * c, // Apply proportional decay
+      ),
     );
 
     results.push(result);

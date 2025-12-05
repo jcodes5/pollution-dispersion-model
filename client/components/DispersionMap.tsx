@@ -47,7 +47,8 @@ export default function DispersionMap({
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
+    link.href =
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";
     document.head.appendChild(link);
     return () => {
       if (document.head.contains(link)) {
@@ -62,31 +63,24 @@ export default function DispersionMap({
 
     map.current = L.map(mapContainer.current).setView(
       [latitude, longitude],
-      10
+      10,
     );
 
-    L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      {
-        attribution:
-          '© OpenStreetMap contributors',
-        maxZoom: 19,
-      }
-    ).addTo(map.current);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
+      maxZoom: 19,
+    }).addTo(map.current);
 
     // Add source marker
-    sourceMarkerRef.current = L.marker(
-      [latitude, longitude],
-      {
-        title: "Emission Source",
-        icon: L.icon({
-          iconUrl: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="hsl(var(--primary))"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>`,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16],
-          popupAnchor: [0, -16],
-        }),
-      }
-    )
+    sourceMarkerRef.current = L.marker([latitude, longitude], {
+      title: "Emission Source",
+      icon: L.icon({
+        iconUrl: `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="hsl(var(--primary))"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -16],
+      }),
+    })
       .bindPopup("Emission Source")
       .addTo(map.current);
 
@@ -128,9 +122,7 @@ export default function DispersionMap({
     }
 
     // Create heatmap data from grid
-    const maxValue = Math.max(
-      ...results.map((r) => r.maxConcentration)
-    );
+    const maxValue = Math.max(...results.map((r) => r.maxConcentration));
 
     const gridSize = result.gridPoints.x.length;
     const heatmapData: Array<[number, number, number]> = [];
@@ -151,8 +143,8 @@ export default function DispersionMap({
         const x = xPoints[j];
         const y = yPoints[i];
 
-        const receiverLat = latitude + (x / metersPerDegreeLat);
-        const receiverLon = longitude + (y / metersPerDegreeLon);
+        const receiverLat = latitude + x / metersPerDegreeLat;
+        const receiverLon = longitude + y / metersPerDegreeLon;
 
         // Only add significant concentrations to heatmap
         if (concentration > maxValue * 0.05) {
@@ -216,7 +208,7 @@ export default function DispersionMap({
         weight: 3,
         opacity: 0.8,
         dashArray: "5, 5",
-      }
+      },
     ).addTo(map.current);
 
     windArrowsRef.current.push(arrowLine);
@@ -249,9 +241,7 @@ export default function DispersionMap({
   return (
     <Card className="p-6">
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">
-          Dispersion Map
-        </h2>
+        <h2 className="text-2xl font-bold text-foreground">Dispersion Map</h2>
 
         {/* Map Container */}
         <div
@@ -263,23 +253,38 @@ export default function DispersionMap({
         {/* Color Legend */}
         <div className="grid grid-cols-5 gap-1 p-2 bg-muted/30 rounded">
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "#90ee90" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "#90ee90" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Low</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "#ffee00" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "#ffee00" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Moderate</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "#ff8400" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "#ff8400" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Elevated</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "#ff0000" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "#ff0000" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">High</span>
           </div>
           <div className="flex flex-col items-center">
-            <div className="w-full h-6 rounded" style={{ background: "#8b0000" }} />
+            <div
+              className="w-full h-6 rounded"
+              style={{ background: "#8b0000" }}
+            />
             <span className="text-xs mt-1 text-muted-foreground">Critical</span>
           </div>
         </div>

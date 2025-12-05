@@ -57,7 +57,7 @@ export const handleForecast: RequestHandler = async (req, res) => {
 
     if (forecastData) {
       console.log(
-        `Forecast cache hit for {${latitude},${longitude}} - ${getCacheStats().entries} entries in cache`
+        `Forecast cache hit for {${latitude},${longitude}} - ${getCacheStats().entries} entries in cache`,
       );
       return res.status(200).json({
         success: true,

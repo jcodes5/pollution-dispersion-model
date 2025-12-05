@@ -50,14 +50,12 @@ export default function ReceptorTable({
     <Card className="p-6">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-foreground">
-            Hourly Results
-          </h2>
+          <h2 className="text-2xl font-bold text-foreground">Hourly Results</h2>
           <Button
             onClick={() =>
               exportToCSV(
                 results,
-                `dispersion-results-${new Date().toISOString().split("T")[0]}.csv`
+                `dispersion-results-${new Date().toISOString().split("T")[0]}.csv`,
               )
             }
             size="sm"
@@ -75,15 +73,9 @@ export default function ReceptorTable({
               <TableRow>
                 <TableHead className="w-20">Hour</TableHead>
                 <TableHead>Time</TableHead>
-                <TableHead className="text-right">
-                  Max Conc. (µg/m³)
-                </TableHead>
-                <TableHead className="text-right">
-                  Avg Conc. (µg/m³)
-                </TableHead>
-                <TableHead className="text-right">
-                  Wind Speed (m/s)
-                </TableHead>
+                <TableHead className="text-right">Max Conc. (µg/m³)</TableHead>
+                <TableHead className="text-right">Avg Conc. (µg/m³)</TableHead>
+                <TableHead className="text-right">Wind Speed (m/s)</TableHead>
                 <TableHead className="text-right">Wind Dir. (°)</TableHead>
                 <TableHead className="w-24">Peak</TableHead>
               </TableRow>
@@ -104,15 +96,13 @@ export default function ReceptorTable({
 
                 // Calculate grid average
                 const avgConcentration = getGridAverage(
-                  result.concentrationGrid
+                  result.concentrationGrid,
                 );
 
                 return (
                   <TableRow
                     key={index}
-                    className={
-                      isPeak ? "bg-accent/10 hover:bg-accent/20" : ""
-                    }
+                    className={isPeak ? "bg-accent/10 hover:bg-accent/20" : ""}
                   >
                     <TableCell className="font-semibold text-foreground">
                       {index + 1}
@@ -155,7 +145,9 @@ export default function ReceptorTable({
             <p className="text-2xl font-bold text-foreground mt-1">
               {maxConcentration.toFixed(4)}
             </p>
-            <p className="text-xs text-muted-foreground">µg/m³ at Hour {peakHour + 1}</p>
+            <p className="text-xs text-muted-foreground">
+              µg/m³ at Hour {peakHour + 1}
+            </p>
           </div>
           <div className="p-3 bg-secondary/10 rounded">
             <p className="text-xs font-semibold text-secondary uppercase">

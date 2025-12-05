@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { SimulationParams, HourlyWindOverride, POLLUTANT_DEFAULTS, GRID_SIZES, RECEPTOR_HEIGHT } from "@shared/api";
+import {
+  SimulationParams,
+  HourlyWindOverride,
+  POLLUTANT_DEFAULTS,
+  GRID_SIZES,
+  RECEPTOR_HEIGHT,
+} from "@shared/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -27,7 +33,7 @@ export default function SimulatorControls({
   const [autoMapStability, setAutoMapStability] = useState(true);
   const [showWindOverrides, setShowWindOverrides] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     latitude: 40.7128,
     longitude: -74.006,
@@ -42,18 +48,25 @@ export default function SimulatorControls({
     pollutantType: "PM2.5" as const,
     receptorHeight: RECEPTOR_HEIGHT.DEFAULT,
     gridSize: 40 as const,
-    depositionVelocity: POLLUTANT_DEFAULTS['PM2.5'].depositonVelocity,
+    depositionVelocity: POLLUTANT_DEFAULTS["PM2.5"].depositonVelocity,
     mixingHeight: 500,
     lossRate: 0,
   });
 
   const [windOverrides, setWindOverrides] = useState<HourlyWindOverride[]>([]);
 
-  const handleInputChange = (field: string, value: string | number | boolean) => {
+  const handleInputChange = (
+    field: string,
+    value: string | number | boolean,
+  ) => {
     setFormData((prev) => ({
       ...prev,
-      [field]: typeof value === "string" ? 
-        (isNaN(Number(value)) ? value : parseFloat(value)) : value,
+      [field]:
+        typeof value === "string"
+          ? isNaN(Number(value))
+            ? value
+            : parseFloat(value)
+          : value,
     }));
   };
 
@@ -61,7 +74,7 @@ export default function SimulatorControls({
     handleInputChange("pollutantType", pollutant);
     handleInputChange(
       "depositionVelocity",
-      POLLUTANT_DEFAULTS[pollutant].depositonVelocity
+      POLLUTANT_DEFAULTS[pollutant].depositonVelocity,
     );
   };
 
@@ -151,31 +164,23 @@ export default function SimulatorControls({
           </h3>
           <div className="space-y-3">
             <div>
-              <Label className="text-sm text-muted-foreground">
-                Latitude
-              </Label>
+              <Label className="text-sm text-muted-foreground">Latitude</Label>
               <Input
                 type="number"
                 step="0.0001"
                 value={formData.latitude}
-                onChange={(e) =>
-                  handleInputChange("latitude", e.target.value)
-                }
+                onChange={(e) => handleInputChange("latitude", e.target.value)}
                 className="mt-1"
                 disabled={isLoading}
               />
             </div>
             <div>
-              <Label className="text-sm text-muted-foreground">
-                Longitude
-              </Label>
+              <Label className="text-sm text-muted-foreground">Longitude</Label>
               <Input
                 type="number"
                 step="0.0001"
                 value={formData.longitude}
-                onChange={(e) =>
-                  handleInputChange("longitude", e.target.value)
-                }
+                onChange={(e) => handleInputChange("longitude", e.target.value)}
                 className="mt-1"
                 disabled={isLoading}
               />
@@ -342,24 +347,12 @@ export default function SimulatorControls({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="A">
-                      A - Very Unstable
-                    </SelectItem>
-                    <SelectItem value="B">
-                      B - Unstable
-                    </SelectItem>
-                    <SelectItem value="C">
-                      C - Slightly Unstable
-                    </SelectItem>
-                    <SelectItem value="D">
-                      D - Neutral
-                    </SelectItem>
-                    <SelectItem value="E">
-                      E - Slightly Stable
-                    </SelectItem>
-                    <SelectItem value="F">
-                      F - Stable
-                    </SelectItem>
+                    <SelectItem value="A">A - Very Unstable</SelectItem>
+                    <SelectItem value="B">B - Unstable</SelectItem>
+                    <SelectItem value="C">C - Slightly Unstable</SelectItem>
+                    <SelectItem value="D">D - Neutral</SelectItem>
+                    <SelectItem value="E">E - Slightly Stable</SelectItem>
+                    <SelectItem value="F">F - Stable</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -394,9 +387,7 @@ export default function SimulatorControls({
               </p>
             </div>
             <div>
-              <Label className="text-sm text-muted-foreground">
-                Grid Size
-              </Label>
+              <Label className="text-sm text-muted-foreground">Grid Size</Label>
               <Select
                 value={formData.gridSize.toString()}
                 onValueChange={(value) =>
@@ -434,9 +425,7 @@ export default function SimulatorControls({
               max="48"
               step="1"
               value={formData.duration}
-              onChange={(e) =>
-                handleInputChange("duration", e.target.value)
-              }
+              onChange={(e) => handleInputChange("duration", e.target.value)}
               className="mt-1"
               disabled={isLoading}
             />

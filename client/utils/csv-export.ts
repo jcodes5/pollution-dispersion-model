@@ -14,7 +14,7 @@ interface CSVRow {
  */
 export function exportToCSV(
   results: DispersionResult[],
-  filename: string = "dispersion-results.csv"
+  filename: string = "dispersion-results.csv",
 ): void {
   if (results.length === 0) {
     console.warn("No results to export");
@@ -58,7 +58,7 @@ export function exportToCSV(
         row.averageConcentration,
         row.windSpeed,
         row.windDirection,
-      ].join(",")
+      ].join(","),
     ),
   ].join("\n");
 
