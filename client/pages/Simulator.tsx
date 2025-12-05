@@ -53,6 +53,7 @@ export default function Simulator() {
   });
 
   const handleSimulate = (params: SimulationParams) => {
+    setLastParams(params);
     simulateMutation.mutate(params);
   };
 
