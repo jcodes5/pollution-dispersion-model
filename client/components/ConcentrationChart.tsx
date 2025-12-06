@@ -88,10 +88,9 @@ export default function ConcentrationChart({
                 tick={{ fontSize: 12 }}
                 stroke="hsl(var(--muted-foreground))"
               />
-              <ChartTooltip
-                cursor={{ stroke: "hsl(var(--primary))", strokeWidth: 1 }}
+              <Legend
+                wrapperStyle={{ paddingTop: "20px" }}
               />
-              <Legend />
               <Line
                 type="monotone"
                 dataKey="concentration"
