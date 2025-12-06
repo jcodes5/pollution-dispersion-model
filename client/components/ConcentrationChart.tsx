@@ -89,7 +89,17 @@ export default function ConcentrationChart({
                 stroke="hsl(var(--muted-foreground))"
               />
               <ChartTooltip
-                content={<ChartTooltipContent indicator="line" />}
+                content={({ active, payload, label }: any) => {
+                  if (!active || !payload?.length) return null;
+                  return (
+                    <ChartTooltipContent
+                      active={active}
+                      payload={payload}
+                      label={label}
+                      indicator="line"
+                    />
+                  );
+                }}
               />
               <Legend />
               <Line
