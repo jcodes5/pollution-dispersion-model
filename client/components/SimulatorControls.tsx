@@ -55,18 +55,10 @@ export default function SimulatorControls({
 
   const [windOverrides, setWindOverrides] = useState<HourlyWindOverride[]>([]);
 
-  const handleInputChange = (
-    field: string,
-    value: string | number | boolean,
-  ) => {
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData((prev) => ({
       ...prev,
-      [field]:
-        typeof value === "string"
-          ? isNaN(Number(value))
-            ? value
-            : parseFloat(value)
-          : value,
+      [field]: typeof value === "string" ? parseFloat(value) : value,
     }));
   };
 
@@ -103,7 +95,7 @@ export default function SimulatorControls({
       longitude: formData.longitude,
       emissionRate: formData.emissionRate,
       sourceHeight: formData.sourceHeight,
-      stabilityClass: autoMapStability ? undefined : formData.stabilityClass,
+      stabilityClass: formData.stabilityClass,
       windSpeed: formData.windSpeed,
       windDirection: formData.windDirection,
       stackDiameter: formData.stackDiameter,
@@ -119,6 +111,13 @@ export default function SimulatorControls({
       lossRate: formData.lossRate,
       hourlyWindOverrides: windOverrides.length > 0 ? windOverrides : undefined,
     };
+
+    // Only include wind parameters if not using auto weather
+    if (!useAutoWeather) {
+      params.windSpeed = formData.windSpeed;
+      params.windDirection = formData.windDirection;
+    }
+
     onSimulate(params);
   };
 
@@ -318,80 +317,14 @@ export default function SimulatorControls({
               </div>
             )}
 
-            <div className="flex items-center gap-2 p-2 bg-muted/50 rounded">
-              <Checkbox
-                checked={autoMapStability}
-                onCheckedChange={(checked) =>
-                  setAutoMapStability(checked as boolean)
-                }
-                disabled={isLoading}
-              />
-              <Label className="text-sm cursor-pointer">
-                Auto-map stability class
-              </Label>
-            </div>
-
-            {!autoMapStability && (
-              <div>
-                <Label className="text-sm text-muted-foreground">
-                  Stability Class
-                </Label>
-                <Select
-                  value={formData.stabilityClass}
-                  onValueChange={(value) =>
-                    handleInputChange("stabilityClass", value)
-                  }
-                  disabled={isLoading}
-                >
-                  <SelectTrigger className="mt-1">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="A">A - Very Unstable</SelectItem>
-                    <SelectItem value="B">B - Unstable</SelectItem>
-                    <SelectItem value="C">C - Slightly Unstable</SelectItem>
-                    <SelectItem value="D">D - Neutral</SelectItem>
-                    <SelectItem value="E">E - Slightly Stable</SelectItem>
-                    <SelectItem value="F">F - Stable</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Receptor Section */}
-        <div>
-          <h3 className="text-sm font-semibold text-foreground mb-3 uppercase tracking-wide">
-            Receptor
-          </h3>
-          <div className="space-y-3">
             <div>
               <Label className="text-sm text-muted-foreground">
-                Receptor Height (m)
+                Stability Class
               </Label>
-              <Input
-                type="number"
-                min={RECEPTOR_HEIGHT.MIN}
-                max={RECEPTOR_HEIGHT.MAX}
-                step="0.1"
-                value={formData.receptorHeight}
-                onChange={(e) =>
-                  handleInputChange("receptorHeight", e.target.value)
-                }
-                className="mt-1"
-                disabled={isLoading}
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Default: {RECEPTOR_HEIGHT.DEFAULT}m (breathing height)
-              </p>
-            </div>
-            <div>
-              <Label className="text-sm text-muted-foreground">Grid Size</Label>
               <Select
-                value={formData.gridSize.toString()}
+                value={formData.stabilityClass}
                 onValueChange={(value) =>
-                  handleInputChange("gridSize", parseInt(value))
+                  handleInputChange("stabilityClass", value)
                 }
                 disabled={isLoading}
               >
@@ -399,11 +332,12 @@ export default function SimulatorControls({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {GRID_SIZES.map((size) => (
-                    <SelectItem key={size} value={size.toString()}>
-                      {size}×{size} cells
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="A">A - Very Unstable</SelectItem>
+                  <SelectItem value="B">B - Unstable</SelectItem>
+                  <SelectItem value="C">C - Slightly Unstable</SelectItem>
+                  <SelectItem value="D">D - Neutral</SelectItem>
+                  <SelectItem value="E">E - Slightly Stable</SelectItem>
+                  <SelectItem value="F">F - Stable</SelectItem>
                 </SelectContent>
               </Select>
             </div>
