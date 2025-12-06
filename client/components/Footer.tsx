@@ -1,19 +1,50 @@
+import { Link } from "react-router-dom";
+
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="w-full border-t border-border bg-muted/30">
       <div className="container px-4 py-8 md:px-6">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* About */}
           <div>
             <h3 className="text-sm font-semibold text-foreground mb-3">
               About
             </h3>
             <p className="text-sm text-muted-foreground">
-              DispersionSim is a web-based pollutant dispersion simulator using
-              the Gaussian plume model and real-time meteorological data.
+              Advanced air quality modeling made accessible to everyone.
             </p>
+          </div>
+
+          {/* Product */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-3">
+              Product
+            </h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link to="/" className="hover:text-primary transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/simulator"
+                  className="hover:text-primary transition-colors"
+                >
+                  Simulator
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="hover:text-primary transition-colors"
+                >
+                  About Us
+                </Link>
+              </li>
+            </ul>
           </div>
 
           {/* Resources */}
@@ -23,24 +54,42 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a
-                  href="https://open-meteo.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/how-to-use"
                   className="hover:text-primary transition-colors"
                 >
-                  Open-Meteo API
-                </a>
+                  How to Use
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://www.epa.gov/scram/air-dispersion-modeling"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  to="/documentation"
                   className="hover:text-primary transition-colors"
                 >
-                  EPA Dispersion Modeling
-                </a>
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" className="hover:text-primary transition-colors">
+                  FAQ
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-3">
+              Support
+            </h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link
+                  to="/contact"
+                  className="hover:text-primary transition-colors"
+                >
+                  Contact Us
+                </Link>
               </li>
               <li>
                 <a
@@ -52,28 +101,14 @@ export default function Footer() {
                   GitHub
                 </a>
               </li>
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div>
-            <h3 className="text-sm font-semibold text-foreground mb-3">
-              Legal
-            </h3>
-            <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-primary transition-colors">
-                  Contact
+                <a
+                  href="https://open-meteo.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-primary transition-colors"
+                >
+                  Open-Meteo
                 </a>
               </li>
             </ul>
