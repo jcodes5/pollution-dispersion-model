@@ -88,9 +88,7 @@ export default function ConcentrationChart({
                 tick={{ fontSize: 12 }}
                 stroke="hsl(var(--muted-foreground))"
               />
-              <Legend
-                wrapperStyle={{ paddingTop: "20px" }}
-              />
+              <Legend wrapperStyle={{ paddingTop: "20px" }} />
               <Line
                 type="monotone"
                 dataKey="concentration"

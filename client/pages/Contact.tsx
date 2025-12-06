@@ -212,7 +212,9 @@ export default function Contact() {
                   Based Globally
                 </h3>
                 <p className="text-muted-foreground">
-                  DispersionSim is a distributed team supporting users worldwide. We're available across multiple time zones and committed to providing timely support.
+                  DispersionSim is a distributed team supporting users
+                  worldwide. We're available across multiple time zones and
+                  committed to providing timely support.
                 </p>
               </div>
             </div>

@@ -1,7 +1,14 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, MapPin, Settings, Play, BarChart3, Download } from "lucide-react";
+import {
+  ArrowRight,
+  MapPin,
+  Settings,
+  Play,
+  BarChart3,
+  Download,
+} from "lucide-react";
 
 export default function HowToUse() {
   return (
@@ -36,7 +43,9 @@ export default function HowToUse() {
                     Select Your Location
                   </h3>
                   <p className="text-muted-foreground mb-4">
-                    Navigate to the Simulator page and enter the geographic coordinates where you want to model pollutant dispersion. You can specify:
+                    Navigate to the Simulator page and enter the geographic
+                    coordinates where you want to model pollutant dispersion.
+                    You can specify:
                   </p>
                   <ul className="list-disc list-inside space-y-2 text-muted-foreground">
                     <li>Latitude (North-South position)</li>
@@ -62,10 +71,22 @@ export default function HowToUse() {
                     Set up your emission source characteristics:
                   </p>
                   <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                    <li><strong>Emission Rate:</strong> Mass per second (g/s) of pollutant being released</li>
-                    <li><strong>Source Height:</strong> Height above ground where emissions occur (meters)</li>
-                    <li><strong>Temperature:</strong> Emission temperature for buoyancy calculations</li>
-                    <li><strong>Pollutant Type:</strong> PM2.5, PM10, or other particulates</li>
+                    <li>
+                      <strong>Emission Rate:</strong> Mass per second (g/s) of
+                      pollutant being released
+                    </li>
+                    <li>
+                      <strong>Source Height:</strong> Height above ground where
+                      emissions occur (meters)
+                    </li>
+                    <li>
+                      <strong>Temperature:</strong> Emission temperature for
+                      buoyancy calculations
+                    </li>
+                    <li>
+                      <strong>Pollutant Type:</strong> PM2.5, PM10, or other
+                      particulates
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -83,11 +104,18 @@ export default function HowToUse() {
                     Run Simulation
                   </h3>
                   <p className="text-muted-foreground mb-4">
-                    Click the "Run Simulation" button to process your parameters:
+                    Click the "Run Simulation" button to process your
+                    parameters:
                   </p>
                   <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                    <li>The system automatically fetches 48-hour weather forecast data</li>
-                    <li>Gaussian plume model calculations are performed for each hour</li>
+                    <li>
+                      The system automatically fetches 48-hour weather forecast
+                      data
+                    </li>
+                    <li>
+                      Gaussian plume model calculations are performed for each
+                      hour
+                    </li>
                     <li>Results are generated typically within seconds</li>
                   </ul>
                 </div>
@@ -109,9 +137,18 @@ export default function HowToUse() {
                     Explore three comprehensive visualization tabs:
                   </p>
                   <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                    <li><strong>Visualization:</strong> Interactive 2D map showing dispersion plume and concentration heatmap</li>
-                    <li><strong>Time Series:</strong> Line graph showing concentration changes over 48 hours</li>
-                    <li><strong>Details:</strong> Detailed hourly statistics and peak concentration data</li>
+                    <li>
+                      <strong>Visualization:</strong> Interactive 2D map showing
+                      dispersion plume and concentration heatmap
+                    </li>
+                    <li>
+                      <strong>Time Series:</strong> Line graph showing
+                      concentration changes over 48 hours
+                    </li>
+                    <li>
+                      <strong>Details:</strong> Detailed hourly statistics and
+                      peak concentration data
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -132,7 +169,9 @@ export default function HowToUse() {
                     Export your results for further analysis:
                   </p>
                   <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                    <li>Download results as CSV files for spreadsheet analysis</li>
+                    <li>
+                      Download results as CSV files for spreadsheet analysis
+                    </li>
                     <li>Integrate data with other modeling tools</li>
                     <li>Create custom reports and presentations</li>
                   </ul>
@@ -155,7 +194,8 @@ export default function HowToUse() {
                 📍 Accuracy with Coordinates
               </h3>
               <p className="text-sm text-muted-foreground">
-                Use precise coordinates for your location. Even small variations can affect wind patterns and dispersion results.
+                Use precise coordinates for your location. Even small variations
+                can affect wind patterns and dispersion results.
               </p>
             </Card>
 
@@ -164,7 +204,8 @@ export default function HowToUse() {
                 ⚙️ Stability Class Selection
               </h3>
               <p className="text-sm text-muted-foreground">
-                Select the appropriate atmospheric stability class based on time of day and cloud cover for more realistic modeling.
+                Select the appropriate atmospheric stability class based on time
+                of day and cloud cover for more realistic modeling.
               </p>
             </Card>
 
@@ -173,7 +214,8 @@ export default function HowToUse() {
                 🌡️ Temperature Effects
               </h3>
               <p className="text-sm text-muted-foreground">
-                Higher emission temperatures result in more buoyancy and higher rise of the plume above ground.
+                Higher emission temperatures result in more buoyancy and higher
+                rise of the plume above ground.
               </p>
             </Card>
 
@@ -182,7 +224,8 @@ export default function HowToUse() {
                 📊 Compare Scenarios
               </h3>
               <p className="text-sm text-muted-foreground">
-                Run multiple simulations with different parameters to understand how each factor affects dispersion.
+                Run multiple simulations with different parameters to understand
+                how each factor affects dispersion.
               </p>
             </Card>
           </div>
@@ -197,7 +240,8 @@ export default function HowToUse() {
               Ready to Get Started?
             </h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Launch the simulator and run your first dispersion analysis now. No setup required.
+              Launch the simulator and run your first dispersion analysis now.
+              No setup required.
             </p>
             <Link to="/simulator">
               <Button size="lg" className="bg-primary hover:bg-primary/90">
