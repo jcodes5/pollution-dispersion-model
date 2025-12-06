@@ -1,6 +1,11 @@
 import { RequestHandler } from "express";
 import { ForecastResponse, ForecastRequest } from "@shared/api";
 import { fetchForecast, generateMockForecast } from "../utils/open-meteo";
+import {
+  getCachedForecast,
+  setCachedForecast,
+  getCacheStats,
+} from "../utils/forecast-cache";
 
 export const handleForecast: RequestHandler = async (req, res) => {
   try {
@@ -47,10 +52,26 @@ export const handleForecast: RequestHandler = async (req, res) => {
       } as ForecastResponse);
     }
 
-    // Fetch forecast from Open-Meteo
-    let forecastData;
+    // Check cache first
+    let forecastData = getCachedForecast(latitude, longitude);
+
+    if (forecastData) {
+      console.log(
+        `Forecast cache hit for {${latitude},${longitude}} - ${getCacheStats().entries} entries in cache`,
+      );
+      return res.status(200).json({
+        success: true,
+        data: forecastData.slice(0, hours),
+        location: { lat: latitude, lon: longitude },
+      } as ForecastResponse);
+    }
+
+    // Cache miss - fetch from API
     try {
       forecastData = await fetchForecast(latitude, longitude, hours);
+      // Store in cache
+      setCachedForecast(latitude, longitude, forecastData);
+      console.log(`Forecast cache miss for {${latitude},${longitude}}`);
     } catch (error) {
       console.warn("Open-Meteo API failed, using mock data:", error);
       // Fall back to mock data if API fails

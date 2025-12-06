@@ -6,14 +6,15 @@ import {
   DispersionResult,
 } from "@shared/api";
 import SimulatorControls from "@/components/SimulatorControls";
-import DispersionVisualization from "@/components/DispersionVisualization";
+import DispersionMap from "@/components/DispersionMap";
 import ConcentrationChart from "@/components/ConcentrationChart";
-import ConcentrationTable from "@/components/ConcentrationTable";
+import ReceptorTable from "@/components/ReceptorTable";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Simulator() {
   const [results, setResults] = useState<DispersionResult[]>([]);
+  const [lastParams, setLastParams] = useState<SimulationParams | null>(null);
   const { toast } = useToast();
 
   const simulateMutation = useMutation({
@@ -44,7 +45,7 @@ export default function Simulator() {
       setResults(data.results);
       toast({
         title: "Simulation Complete",
-        description: `Peak concentration: ${data.stats.peakConcentration.toFixed(4)} g/m³ at ${data.stats.peakTime}`,
+        description: `Peak concentration: ${data.stats.peakConcentration.toFixed(4)} µg/m³ at ${data.stats.peakTime}`,
       });
     },
     onError: (error) => {
@@ -57,6 +58,7 @@ export default function Simulator() {
   });
 
   const handleSimulate = (params: SimulationParams) => {
+    setLastParams(params);
     simulateMutation.mutate(params);
   };
 
@@ -94,10 +96,14 @@ export default function Simulator() {
               </TabsList>
 
               <TabsContent value="visualization" className="mt-4">
-                <DispersionVisualization
-                  results={results}
-                  isLoading={simulateMutation.isPending}
-                />
+                {lastParams && (
+                  <DispersionMap
+                    results={results}
+                    latitude={lastParams.latitude}
+                    longitude={lastParams.longitude}
+                    isLoading={simulateMutation.isPending}
+                  />
+                )}
               </TabsContent>
 
               <TabsContent value="timeseries" className="mt-4">
@@ -108,7 +114,7 @@ export default function Simulator() {
               </TabsContent>
 
               <TabsContent value="table" className="mt-4">
-                <ConcentrationTable
+                <ReceptorTable
                   results={results}
                   isLoading={simulateMutation.isPending}
                 />

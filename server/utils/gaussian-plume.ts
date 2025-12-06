@@ -1,19 +1,14 @@
 import { DispersionResult, MeteoDataPoint } from "@shared/api";
+import { getPasquillGiffordCoefficients } from "./stability-mapping";
 
 /**
- * Gaussian Plume Model Implementation
- * Based on EPA's Gaussian Plume Model
+ * Enhanced Gaussian Plume Model Implementation
+ * Features:
+ * - Pasquill-Gifford dispersion parameters
+ * - Coordinate frame conversion (wind direction to downwind/crosswind)
+ * - PM deposition and decay model
+ * - Multi-hour simulation with concentration decay
  */
-
-// Stability class parameters for dispersion
-const STABILITY_PARAMS: Record<string, { ay: number; az: number }> = {
-  A: { ay: 0.22, az: 0.2 },
-  B: { ay: 0.16, az: 0.12 },
-  C: { ay: 0.11, az: 0.08 },
-  D: { ay: 0.08, az: 0.06 },
-  E: { ay: 0.06, az: 0.03 },
-  F: { ay: 0.03, az: 0.016 },
-};
 
 interface GaussianParams {
   Q: number; // emission rate (g/s)
@@ -22,30 +17,70 @@ interface GaussianParams {
   stabilityClass: string;
   latitude: number;
   longitude: number;
+  windDirection: number; // degrees (0-360)
+  depositionVelocity?: number; // m/s
+  mixingHeight?: number; // m
+  lossRate?: number; // 1/s
+}
+
+interface GridPoint {
+  lat: number;
+  lon: number;
+  x: number; // downwind distance (m)
+  y: number; // crosswind distance (m)
 }
 
 /**
- * Calculate dispersion parameters (sigma_y and sigma_z) based on downwind distance
- * Using Pasquill-Gifford parameters
+ * Convert absolute coordinates to downwind/crosswind frame
+ */
+function convertToDownwindFrame(
+  receiverLat: number,
+  receiverLon: number,
+  sourceLat: number,
+  sourceLon: number,
+  windDirection: number,
+): { x: number; y: number } {
+  // Simple distance calculation (Euclidean, valid for small distances)
+  const deltaLat = (receiverLat - sourceLat) * 111000; // 1 degree lat ≈ 111 km
+  const deltaLon =
+    (receiverLon - sourceLon) * 111000 * Math.cos((sourceLat * Math.PI) / 180);
+
+  // Convert wind direction to radians
+  // Wind blows FROM wind direction, TO wind direction + 180
+  const windAngleRad = ((windDirection + 180) * Math.PI) / 180;
+
+  // Rotate coordinates so wind blows in +x direction
+  const cos_a = Math.cos(windAngleRad);
+  const sin_a = Math.sin(windAngleRad);
+
+  const x = deltaLat * cos_a + deltaLon * sin_a;
+  const y = -deltaLat * sin_a + deltaLon * cos_a;
+
+  return { x, y };
+}
+
+/**
+ * Calculate Pasquill-Gifford dispersion parameters (sigma_y and sigma_z)
+ * Using polynomial form: sigma = a * x^b
+ * where x is downwind distance in km
  */
 function calculateDispersionParams(
   distance: number,
   stabilityClass: string,
 ): { sigma_y: number; sigma_z: number } {
-  const params = STABILITY_PARAMS[stabilityClass] || STABILITY_PARAMS.D;
+  const coeffs = getPasquillGiffordCoefficients(stabilityClass);
 
-  // Pasquill-Gifford dispersion parameters
-  // sigma values in meters for given downwind distance in km
-  const distanceKm = distance / 1000;
+  // Convert distance from meters to km
+  const distanceKm = Math.max(distance / 1000, 0.001);
 
-  // Simplified empirical formulas for sigma_y and sigma_z
-  const sigma_y = params.ay * distanceKm * 1000;
-  const sigma_z = params.az * distanceKm * 1000;
+  // Calculate sigma values using polynomial fit
+  const sigma_y = coeffs.sigma_y.a * Math.pow(distanceKm, coeffs.sigma_y.b);
+  const sigma_z = coeffs.sigma_z.a * Math.pow(distanceKm, coeffs.sigma_z.b);
 
   // Ensure minimum values
   return {
-    sigma_y: Math.max(sigma_y, 1),
-    sigma_z: Math.max(sigma_z, 1),
+    sigma_y: Math.max(sigma_y, 0.5),
+    sigma_z: Math.max(sigma_z, 0.5),
   };
 }
 
@@ -61,7 +96,7 @@ function calculateConcentration(
 ): number {
   const { Q, u, H, stabilityClass } = params;
 
-  // Avoid division by zero
+  // Only calculate for downwind distances
   if (u < 0.1 || x < 1) return 0;
 
   const { sigma_y, sigma_z } = calculateDispersionParams(x, stabilityClass);
@@ -80,13 +115,30 @@ function calculateConcentration(
 }
 
 /**
+ * Apply concentration decay due to deposition and chemical loss
+ * Model: C_t = C_0 * exp(-(v_dep / H_mixing + k_loss) * t)
+ */
+function applyDecay(
+  concentration: number,
+  timeSeconds: number,
+  depositionVelocity: number = 0.002,
+  mixingHeight: number = 500,
+  lossRate: number = 0,
+): number {
+  const decayRate = depositionVelocity / mixingHeight + lossRate;
+  return concentration * Math.exp(-decayRate * timeSeconds);
+}
+
+/**
  * Generate a 2D concentration grid for visualization
  */
 export function generateConcentrationGrid(
   gridSize: number,
   gridSpacing: number,
   params: GaussianParams,
-  receptorHeight: number = 1.5, // breathing height
+  sourceLat: number,
+  sourceLon: number,
+  receptorHeight: number = 1.5,
 ): {
   grid: number[][];
   x_points: number[];
@@ -97,6 +149,7 @@ export function generateConcentrationGrid(
   const x_points = [];
   const y_points = [];
 
+  // Generate grid points
   for (let i = 0; i <= gridSize; i++) {
     x_points.push(i * gridSpacing);
     y_points.push((i - half) * gridSpacing);
@@ -105,6 +158,7 @@ export function generateConcentrationGrid(
   const grid: number[][] = [];
   let maxConcentration = 0;
 
+  // Calculate concentration at each grid point
   for (let i = 0; i <= gridSize; i++) {
     const row: number[] = [];
     for (let j = 0; j <= gridSize; j++) {
@@ -127,28 +181,6 @@ export function generateConcentrationGrid(
 }
 
 /**
- * Rotate coordinates based on wind direction
- */
-function rotateCoordinates(
-  x: number,
-  y: number,
-  windDirection: number,
-): { rotated_x: number; rotated_y: number } {
-  // Wind direction is in degrees, convert to radians
-  // Wind direction 0° = North, 90° = East, etc.
-  // Plume extends downwind, so we rotate by (wind_direction - 90°)
-  const angle = ((windDirection - 90) * Math.PI) / 180;
-
-  const cos_a = Math.cos(angle);
-  const sin_a = Math.sin(angle);
-
-  const rotated_x = x * cos_a - y * sin_a;
-  const rotated_y = x * sin_a + y * cos_a;
-
-  return { rotated_x, rotated_y };
-}
-
-/**
  * Run a single simulation timestep
  */
 export function simulateTimeStep(
@@ -158,6 +190,12 @@ export function simulateTimeStep(
   stabilityClass: string,
   latitude: number,
   longitude: number,
+  gridSize: number = 40,
+  gridSpacing: number = 100,
+  receptorHeight: number = 1.5,
+  depositionVelocity: number = 0.002,
+  mixingHeight: number = 500,
+  lossRate: number = 0,
 ): DispersionResult {
   const params: GaussianParams = {
     Q: emissionRate,
@@ -166,19 +204,21 @@ export function simulateTimeStep(
     stabilityClass,
     latitude,
     longitude,
+    windDirection: meteoData.windDirection,
+    depositionVelocity,
+    mixingHeight,
+    lossRate,
   };
 
   // Generate concentration grid
-  const gridConfig = {
-    gridSize: 50,
-    gridSpacing: 100, // 100m spacing
-  };
-
   const { grid, x_points, y_points, maxConcentration } =
     generateConcentrationGrid(
-      gridConfig.gridSize,
-      gridConfig.gridSpacing,
+      gridSize,
+      gridSpacing,
       params,
+      latitude,
+      longitude,
+      receptorHeight,
     );
 
   return {
@@ -194,6 +234,7 @@ export function simulateTimeStep(
 
 /**
  * Run complete simulation across multiple timesteps
+ * Applies decay model to simulate concentration decrease over time
  */
 export function runSimulation(
   forecastData: MeteoDataPoint[],
@@ -202,6 +243,12 @@ export function runSimulation(
   stabilityClass: string,
   latitude: number,
   longitude: number,
+  gridSize: number = 40,
+  gridSpacing: number = 100,
+  receptorHeight: number = 1.5,
+  depositionVelocity: number = 0.002,
+  mixingHeight: number = 500,
+  lossRate: number = 0,
 ): {
   results: DispersionResult[];
   stats: {
@@ -217,6 +264,10 @@ export function runSimulation(
   let peakHour = 0;
   const concentrations: number[] = [];
 
+  // Time tracking for decay calculation
+  let cumulativeTime = 0;
+  const timeStepSeconds = 3600; // 1 hour
+
   forecastData.forEach((meteoPoint, index) => {
     const result = simulateTimeStep(
       meteoPoint,
@@ -225,17 +276,50 @@ export function runSimulation(
       stabilityClass,
       latitude,
       longitude,
+      gridSize,
+      gridSpacing,
+      receptorHeight,
+      depositionVelocity,
+      mixingHeight,
+      lossRate,
+    );
+
+    // Apply decay to concentration
+    const decayedConcentration = applyDecay(
+      result.maxConcentration,
+      cumulativeTime,
+      depositionVelocity,
+      mixingHeight,
+      lossRate,
     );
 
     result.hour = index;
-    results.push(result);
-    concentrations.push(result.maxConcentration);
+    result.maxConcentration = decayedConcentration;
 
-    if (result.maxConcentration > peakConcentration) {
-      peakConcentration = result.maxConcentration;
+    // Apply decay to entire grid as well
+    result.concentrationGrid = result.concentrationGrid.map((row) =>
+      row.map(
+        (c) =>
+          applyDecay(
+            c,
+            cumulativeTime,
+            depositionVelocity,
+            mixingHeight,
+            lossRate,
+          ) * c, // Apply proportional decay
+      ),
+    );
+
+    results.push(result);
+    concentrations.push(decayedConcentration);
+
+    if (decayedConcentration > peakConcentration) {
+      peakConcentration = decayedConcentration;
       peakTime = result.time;
       peakHour = index;
     }
+
+    cumulativeTime += timeStepSeconds;
   });
 
   const averageConcentration =

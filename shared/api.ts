@@ -51,20 +51,37 @@ export interface DispersionResult {
 }
 
 /**
- * Simulation parameters request
+ * Hourly wind override for manual control
+ */
+export interface HourlyWindOverride {
+  hour: number;
+  windSpeed: number;
+  windDirection: number;
+}
+
+/**
+ * Enhanced simulation parameters request
  */
 export interface SimulationParams {
   latitude: number;
   longitude: number;
   emissionRate: number;
   sourceHeight: number;
-  stabilityClass: string;
+  stabilityClass?: string; // Optional if auto-mapping is enabled
   windSpeed?: number;
   windDirection?: number;
   stackDiameter?: number;
   exitVelocity?: number;
   duration: number;
   useAutoWeather: boolean;
+  autoMapStability?: boolean;
+  pollutantType: 'PM2.5' | 'PM10';
+  receptorHeight?: number;
+  gridSize?: 20 | 30 | 40 | 50;
+  depositionVelocity?: number;
+  mixingHeight?: number;
+  lossRate?: number;
+  hourlyWindOverrides?: HourlyWindOverride[];
 }
 
 /**
@@ -91,3 +108,31 @@ export interface ConcentrationPoint {
   concentration: number;
   time: string;
 }
+
+/**
+ * Pollutant default parameters
+ */
+export const POLLUTANT_DEFAULTS = {
+  'PM2.5': {
+    depositonVelocity: 0.002, // m/s
+    description: 'Fine particulate matter (diameter < 2.5 μm)',
+  },
+  'PM10': {
+    depositionVelocity: 0.01, // m/s
+    description: 'Coarse particulate matter (diameter < 10 μm)',
+  },
+};
+
+/**
+ * Grid size options
+ */
+export const GRID_SIZES = [20, 30, 40, 50] as const;
+
+/**
+ * Receptor height defaults and limits
+ */
+export const RECEPTOR_HEIGHT = {
+  DEFAULT: 1.5, // m (breathing height)
+  MIN: 0.1,
+  MAX: 100,
+};

@@ -11,7 +11,6 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
   Legend,
   ResponsiveContainer,
 } from "recharts";
@@ -89,14 +88,8 @@ export default function ConcentrationChart({
                 tick={{ fontSize: 12 }}
                 stroke="hsl(var(--muted-foreground))"
               />
-              <Tooltip
-                content={
-                  <ChartTooltipContent
-                    className="bg-background border border-border"
-                    indicator="line"
-                  />
-                }
-                cursor={{ stroke: "hsl(var(--primary))", strokeWidth: 1 }}
+              <ChartTooltip
+                content={<ChartTooltipContent indicator="line" />}
               />
               <Legend />
               <Line
