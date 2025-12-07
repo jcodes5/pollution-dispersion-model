@@ -23,13 +23,14 @@ export default function Home() {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row pt-4">
                 <Link to="/simulator">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90">
+                  <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200">
                     Launch Simulator
                   </Button>
                 </Link>
                 <Button
                   size="lg"
                   variant="outline"
+                  className="border-2 hover:bg-muted/50 transition-all duration-200"
                   onClick={() => {
                     document
                       .getElementById("features")
@@ -41,7 +42,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center justify-center">
-              <div className="relative w-full max-w-md h-80 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center overflow-hidden">
+              <div className="relative w-full max-w-md h-80 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
                 <div className="absolute inset-0 opacity-30">
                   <div className="absolute top-10 left-10 w-32 h-32 bg-primary/30 rounded-full blur-3xl animate-pulse" />
                   <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/30 rounded-full blur-3xl animate-pulse" />
@@ -61,151 +62,159 @@ export default function Home() {
       {/* Features Section */}
       <section
         id="features"
-        className="w-full py-12 md:py-24 lg:py-32 bg-muted/30"
+        className="w-full py-20 md:py-32 bg-muted/20"
       >
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-foreground">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
               Powerful Features
             </h2>
-            <p className="max-w-2xl text-lg text-muted-foreground">
-              Everything you need to model and visualize pollutant dispersion
-              patterns with precision
+            <p className="max-w-2xl text-xl text-muted-foreground leading-relaxed">
+              Everything you need to model and visualize pollutant dispersion patterns with precision
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {/* Feature 1 */}
-            <Card className="p-6 border border-border hover:border-primary/50 transition-colors">
-              <div className="flex flex-col space-y-3">
-                <Cloud className="w-12 h-12 text-primary" />
-                <h3 className="text-xl font-bold text-foreground">
+            <div className="group p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
+              <div className="flex flex-col space-y-4">
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <Cloud className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">
                   Real-Time Weather
                 </h3>
-                <p className="text-muted-foreground">
-                  Automatic meteorological data from Open-Meteo API with hourly
-                  wind speed, direction, and temperature forecasts
+                <p className="text-muted-foreground leading-relaxed">
+                  Automatic meteorological data from Open-Meteo API with hourly wind speed, direction, and temperature forecasts
                 </p>
               </div>
-            </Card>
+            </div>
 
             {/* Feature 2 */}
-            <Card className="p-6 border border-border hover:border-primary/50 transition-colors">
-              <div className="flex flex-col space-y-3">
-                <Wind className="w-12 h-12 text-secondary" />
-                <h3 className="text-xl font-bold text-foreground">
+            <div className="group p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
+              <div className="flex flex-col space-y-4">
+                <div className="w-14 h-14 bg-secondary/10 rounded-lg flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+                  <Wind className="w-7 h-7 text-secondary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">
                   Gaussian Plume Model
                 </h3>
-                <p className="text-muted-foreground">
-                  Industry-standard dispersion modeling based on Gaussian plume
-                  theory with stability class corrections
+                <p className="text-muted-foreground leading-relaxed">
+                  Industry-standard dispersion modeling based on Gaussian plume theory with stability class corrections
                 </p>
               </div>
-            </Card>
+            </div>
 
             {/* Feature 3 */}
-            <Card className="p-6 border border-border hover:border-primary/50 transition-colors">
-              <div className="flex flex-col space-y-3">
-                <Map className="w-12 h-12 text-accent" />
-                <h3 className="text-xl font-bold text-foreground">
+            <div className="group p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
+              <div className="flex flex-col space-y-4">
+                <div className="w-14 h-14 bg-accent/10 rounded-lg flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <Map className="w-7 h-7 text-accent" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">
                   Visual Mapping
                 </h3>
-                <p className="text-muted-foreground">
-                  Interactive 2D visualization of dispersion plumes with
-                  color-coded concentration levels
+                <p className="text-muted-foreground leading-relaxed">
+                  Interactive 2D visualization of dispersion plumes with color-coded concentration levels
                 </p>
               </div>
-            </Card>
+            </div>
 
             {/* Feature 4 */}
-            <Card className="p-6 border border-border hover:border-primary/50 transition-colors">
-              <div className="flex flex-col space-y-3">
-                <BarChart3 className="w-12 h-12 text-primary" />
-                <h3 className="text-xl font-bold text-foreground">
+            <div className="group p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
+              <div className="flex flex-col space-y-4">
+                <div className="w-14 h-14 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <BarChart3 className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">
                   Time-Series Analytics
                 </h3>
-                <p className="text-muted-foreground">
-                  Track concentration changes over 1-48 hours with interactive
-                  charts and detailed statistics
+                <p className="text-muted-foreground leading-relaxed">
+                  Track concentration changes over 1-48 hours with interactive charts and detailed statistics
                 </p>
               </div>
-            </Card>
+            </div>
 
             {/* Feature 5 */}
-            <Card className="p-6 border border-border hover:border-primary/50 transition-colors">
-              <div className="flex flex-col space-y-3">
-                <Zap className="w-12 h-12 text-secondary" />
-                <h3 className="text-xl font-bold text-foreground">
+            <div className="group p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
+              <div className="flex flex-col space-y-4">
+                <div className="w-14 h-14 bg-secondary/10 rounded-lg flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+                  <Zap className="w-7 h-7 text-secondary" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">
                   Fast Processing
                 </h3>
-                <p className="text-muted-foreground">
-                  Server-side computation for instant simulation results without
-                  browser lag or performance issues
+                <p className="text-muted-foreground leading-relaxed">
+                  Server-side computation for instant simulation results without browser lag or performance issues
                 </p>
               </div>
-            </Card>
+            </div>
 
             {/* Feature 6 */}
-            <Card className="p-6 border border-border hover:border-primary/50 transition-colors">
-              <div className="flex flex-col space-y-3">
-                <TrendingUp className="w-12 h-12 text-accent" />
-                <h3 className="text-xl font-bold text-foreground">
+            <div className="group p-8 bg-background rounded-xl border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
+              <div className="flex flex-col space-y-4">
+                <div className="w-14 h-14 bg-accent/10 rounded-lg flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                  <TrendingUp className="w-7 h-7 text-accent" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">
                   Customizable Inputs
                 </h3>
-                <p className="text-muted-foreground">
-                  Full control over emission rate, source height, stability
-                  class, and wind parameters
+                <p className="text-muted-foreground leading-relaxed">
+                  Full control over emission rate, source height, stability class, and wind parameters
                 </p>
               </div>
-            </Card>
+            </div>
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="w-full py-12 md:py-24 lg:py-32">
+      <section className="w-full py-20 md:py-32">
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-foreground">
+          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
               How It Works
             </h2>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-4">
+          <div className="grid gap-12 md:grid-cols-4 max-w-6xl mx-auto">
             {[
               {
-                step: "1",
+                step: "01",
                 title: "Input Parameters",
-                description:
-                  "Enter emission rate, source height, stability class, and location",
+                description: "Enter emission rate, source height, stability class, and location",
               },
               {
-                step: "2",
+                step: "02",
                 title: "Fetch Weather",
-                description:
-                  "Automatically retrieve 48-hour meteorological forecast data",
+                description: "Automatically retrieve 48-hour meteorological forecast data",
               },
               {
-                step: "3",
+                step: "03",
                 title: "Calculate Dispersion",
-                description:
-                  "Run Gaussian plume model for each hourly forecast step",
+                description: "Run Gaussian plume model for each hourly forecast step",
               },
               {
-                step: "4",
+                step: "04",
                 title: "Visualize Results",
-                description:
-                  "View animated dispersion maps and concentration charts",
+                description: "View animated dispersion maps and concentration charts",
               },
-            ].map((item) => (
-              <div key={item.step} className="flex flex-col space-y-3">
-                <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
-                  {item.step}
+            ].map((item, index) => (
+              <div key={item.step} className="flex flex-col space-y-6 text-center">
+                <div className="relative">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                    <span className="text-2xl font-light text-primary">{item.step}</span>
+                  </div>
+                  {index < 3 && (
+                    <div className="hidden md:block absolute top-8 left-full w-full h-px bg-border transform -translate-x-8" />
+                  )}
                 </div>
-                <h3 className="font-bold text-foreground">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {item.description}
-                </p>
+                <div className="space-y-3">
+                  <h3 className="text-xl font-semibold text-foreground">{item.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
@@ -213,18 +222,19 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="w-full py-12 md:py-24 bg-gradient-to-r from-primary/10 to-secondary/10">
+      <section className="w-full py-20 md:py-32 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
         <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-foreground">
-              Ready to Simulate?
-            </h2>
-            <p className="max-w-2xl text-lg text-muted-foreground">
-              Start modeling pollutant dispersion with our advanced simulator.
-              No setup required — begin immediately.
-            </p>
+          <div className="flex flex-col items-center justify-center space-y-8 text-center max-w-3xl mx-auto">
+            <div className="space-y-4">
+              <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
+                Ready to Simulate?
+              </h2>
+              <p className="text-xl text-muted-foreground leading-relaxed">
+                Start modeling pollutant dispersion with our advanced simulator. No setup required — begin immediately.
+              </p>
+            </div>
             <Link to="/simulator">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 mt-4">
+              <Button size="lg" className="px-10 py-6 text-lg font-medium bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200">
                 Launch Simulator Now
               </Button>
             </Link>

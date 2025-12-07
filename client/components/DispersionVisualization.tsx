@@ -3,7 +3,8 @@ import { DispersionResult } from "@shared/api";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, RotateCcw } from "lucide-react";
+import { Play, Pause, RotateCcw, Download } from "lucide-react";
+import html2canvas from "html2canvas";
 
 interface DispersionVisualizationProps {
   results: DispersionResult[];
@@ -18,6 +19,7 @@ export default function DispersionVisualization({
   const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [maxValue, setMaxValue] = useState(1);
+  const [isExportingGif, setIsExportingGif] = useState(false);
 
   // Auto-play animation
   useEffect(() => {
@@ -162,7 +164,122 @@ export default function DispersionVisualization({
     }
   }
 
-  if (results.length === 0) {
+  // Export visualization as PNG (current frame)
+  const exportAsImage = async () => {
+    if (!canvasRef.current || results.length === 0) return;
+
+    try {
+      const canvas = canvasRef.current;
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = `dispersion-frame-${currentTimeIndex + 1}-${new Date().toISOString().split("T")[0]}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error exporting image:", error);
+    }
+  };
+
+  // Export all frames as ZIP with PNG images (simplified alternative to GIF)
+  const exportAsFrames = async () => {
+    if (results.length === 0) return;
+
+    setIsExportingGif(true);
+    try {
+      // Dynamically import jszip for creating ZIP files
+      const { default: JSZip } = await import("jszip");
+      const zip = new JSZip();
+      const framesFolder = zip.folder("frames");
+
+      if (!framesFolder) {
+        throw new Error("Failed to create frames folder in ZIP");
+      }
+
+      // Generate frames
+      for (let i = 0; i < results.length; i++) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 600;
+        canvas.height = 400;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) continue;
+
+        const result = results[i];
+        const grid = result.concentrationGrid;
+        const xPoints = result.gridPoints.x;
+        const yPoints = result.gridPoints.y;
+
+        // Clear canvas
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw grid
+        const cellWidth = canvas.width / (xPoints.length - 1);
+        const cellHeight = canvas.height / (yPoints.length - 1);
+
+        // Render heatmap
+        for (let row = 0; row < grid.length; row++) {
+          for (let col = 0; col < grid[row].length; col++) {
+            const value = grid[row][col];
+            const normalized = Math.min(value / maxValue, 1);
+            const color = getColorForValue(normalized);
+
+            const x = col * cellWidth;
+            const y = row * cellHeight;
+
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, cellWidth, cellHeight);
+          }
+        }
+
+        // Add border
+        ctx.strokeStyle = "#ccc";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+        // Add info text
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 14px Arial";
+        ctx.fillText(`Hour ${i + 1} of ${results.length}`, 10, 25);
+        ctx.font = "12px Arial";
+        ctx.fillText(
+          `Wind: ${result.windSpeed.toFixed(2)} m/s @ ${result.windDirection.toFixed(1)}°`,
+          10,
+          40,
+        );
+        ctx.fillText(
+          `Max Concentration: ${result.maxConcentration.toFixed(4)} g/m³`,
+          10,
+          55,
+        );
+
+        // Convert canvas to blob and add to ZIP
+        const blob = await new Promise<Blob>((resolve) => {
+          canvas.toBlob((b) => resolve(b || new Blob()), "image/png");
+        });
+
+        framesFolder.file(`frame-${String(i + 1).padStart(3, "0")}.png`, blob);
+      }
+
+      // Generate ZIP file
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `dispersion-frames-${new Date().toISOString().split("T")[0]}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      setIsExportingGif(false);
+    } catch (error) {
+      console.error("Error exporting frames:", error);
+      setIsExportingGif(false);
+    }
+  };
+
+  if (!results.length || isLoading) {
     return (
       <Card className="p-6 flex items-center justify-center h-96">
         <div className="text-center">
@@ -187,7 +304,13 @@ export default function DispersionVisualization({
 
         {/* Canvas */}
         <div className="border border-border rounded-lg overflow-hidden bg-white">
-          <canvas ref={canvasRef} width={600} height={400} className="w-full" />
+          <canvas
+            ref={canvasRef}
+            width={600}
+            height={400}
+            className="w-full max-w-full h-auto"
+            style={{ aspectRatio: '600 / 400' }}
+          />
         </div>
 
         {/* Color Legend */}
@@ -257,6 +380,7 @@ export default function DispersionVisualization({
             variant="outline"
             onClick={() => setCurrentTimeIndex(0)}
             disabled={isLoading || results.length === 0}
+            className="min-h-[44px] px-4 md:px-3"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
             Reset
@@ -265,6 +389,7 @@ export default function DispersionVisualization({
             size="sm"
             onClick={() => setIsPlaying(!isPlaying)}
             disabled={isLoading || results.length === 0}
+            className="min-h-[44px] px-4 md:px-3"
           >
             {isPlaying ? (
               <>
@@ -277,6 +402,16 @@ export default function DispersionVisualization({
                 Play
               </>
             )}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={exportAsFrames}
+            disabled={isLoading || results.length === 0 || isExportingGif}
+            className="min-h-[44px] px-4 md:px-3"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            {isExportingGif ? "Exporting..." : "Export Frames"}
           </Button>
         </div>
 

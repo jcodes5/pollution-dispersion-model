@@ -3,7 +3,7 @@ import { DispersionResult } from "@shared/api";
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Play, Pause, RotateCcw } from "lucide-react";
+import { Play, Pause, RotateCcw, Download } from "lucide-react";
 import L from "leaflet";
 
 interface DispersionMapProps {
@@ -39,7 +39,7 @@ export default function DispersionMap({
   const map = useRef<L.Map | null>(null);
   const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const heatmapLayerRef = useRef<L.CanvasLayer | null>(null);
+  const heatmapLayerRef = useRef<L.ImageOverlay | null>(null);
   const sourceMarkerRef = useRef<L.Marker | null>(null);
   const windArrowsRef = useRef<L.Polyline[]>([]);
 
@@ -222,6 +222,33 @@ export default function DispersionMap({
     return "#8b0000"; // Dark red
   }
 
+  // Export current map view as PNG
+  const exportAsPNG = async () => {
+    if (!mapContainer.current) return;
+
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = mapContainer.current.offsetWidth;
+      canvas.height = mapContainer.current.offsetHeight;
+
+      if (ctx) {
+        // Draw the map container
+        const mapCanvas = mapContainer.current.querySelector('canvas') as HTMLCanvasElement;
+        if (mapCanvas) {
+          ctx.drawImage(mapCanvas, 0, 0, canvas.width, canvas.height);
+        }
+
+        const link = document.createElement('a');
+        link.download = `dispersion-map-${new Date().toISOString().split('T')[0]}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }
+    } catch (error) {
+      console.error('Error exporting map:', error);
+    }
+  };
+
   if (results.length === 0) {
     return (
       <Card className="p-6 flex items-center justify-center h-96">
@@ -337,6 +364,15 @@ export default function DispersionMap({
                 Play
               </>
             )}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={exportAsPNG}
+            disabled={isLoading || results.length === 0}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export PNG
           </Button>
         </div>
 

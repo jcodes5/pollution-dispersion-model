@@ -298,15 +298,14 @@ export function runSimulation(
 
     // Apply decay to entire grid as well
     result.concentrationGrid = result.concentrationGrid.map((row) =>
-      row.map(
-        (c) =>
-          applyDecay(
-            c,
-            cumulativeTime,
-            depositionVelocity,
-            mixingHeight,
-            lossRate,
-          ) * c, // Apply proportional decay
+      row.map((c) =>
+        applyDecay(
+          c,
+          cumulativeTime,
+          depositionVelocity,
+          mixingHeight,
+          lossRate,
+        ),
       ),
     );
 

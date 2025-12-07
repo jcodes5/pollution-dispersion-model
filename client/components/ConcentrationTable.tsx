@@ -1,5 +1,7 @@
 import { DispersionResult } from "@shared/api";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -9,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { exportToCSV } from "@/lib/export-utils";
 
 interface ConcentrationTableProps {
   results: DispersionResult[];
@@ -19,6 +22,10 @@ export default function ConcentrationTable({
   results,
   isLoading,
 }: ConcentrationTableProps) {
+  const handleExportCSV = () => {
+    exportToCSV(results);
+  };
+
   if (results.length === 0) {
     return (
       <Card className="p-6 flex items-center justify-center h-80">
@@ -46,7 +53,18 @@ export default function ConcentrationTable({
   return (
     <Card className="p-6">
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-foreground">Hourly Results</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-foreground">Hourly Results</h2>
+          <Button
+            onClick={handleExportCSV}
+            size="sm"
+            variant="outline"
+            disabled={isLoading || results.length === 0}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export CSV
+          </Button>
+        </div>
 
         <ScrollArea className="h-96 border border-border rounded-lg">
           <Table>

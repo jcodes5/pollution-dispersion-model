@@ -48,7 +48,7 @@ export default function SimulatorControls({
     pollutantType: "PM2.5" as const,
     receptorHeight: RECEPTOR_HEIGHT.DEFAULT,
     gridSize: 40 as const,
-    depositionVelocity: POLLUTANT_DEFAULTS["PM2.5"].depositonVelocity,
+    depositionVelocity: POLLUTANT_DEFAULTS["PM2.5"].depositionVelocity,
     mixingHeight: 500,
     lossRate: 0,
   });
@@ -56,9 +56,18 @@ export default function SimulatorControls({
   const [windOverrides, setWindOverrides] = useState<HourlyWindOverride[]>([]);
 
   const handleInputChange = (field: string, value: string | number) => {
+    let processedValue: string | number = value;
+    if (typeof value === "string") {
+      const parsed = parseFloat(value);
+      if (!isNaN(parsed) && isFinite(parsed)) {
+        processedValue = parsed;
+      } else {
+        processedValue = value;
+      }
+    }
     setFormData((prev) => ({
       ...prev,
-      [field]: typeof value === "string" ? parseFloat(value) : value,
+      [field]: processedValue,
     }));
   };
 
@@ -66,7 +75,7 @@ export default function SimulatorControls({
     handleInputChange("pollutantType", pollutant);
     handleInputChange(
       "depositionVelocity",
-      POLLUTANT_DEFAULTS[pollutant].depositonVelocity,
+      POLLUTANT_DEFAULTS[pollutant].depositionVelocity,
     );
   };
 
@@ -122,8 +131,8 @@ export default function SimulatorControls({
   };
 
   return (
-    <Card className="p-6 h-full overflow-y-auto">
-      <h2 className="text-2xl font-bold text-foreground mb-6">
+    <Card className="p-4 md:p-6 h-full overflow-y-auto">
+      <h2 className="text-xl md:text-2xl font-bold text-foreground mb-4 md:mb-6">
         Simulation Parameters
       </h2>
 
@@ -139,7 +148,7 @@ export default function SimulatorControls({
                 <button
                   key={type}
                   onClick={() => handlePollutantChange(type)}
-                  className={`flex-1 px-3 py-2 rounded text-sm font-medium transition-colors ${
+                  className={`flex-1 px-4 py-3 md:px-3 md:py-2 rounded text-sm font-medium transition-colors min-h-[44px] ${
                     formData.pollutantType === type
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-foreground hover:bg-muted/80"
@@ -169,7 +178,7 @@ export default function SimulatorControls({
                 step="0.0001"
                 value={formData.latitude}
                 onChange={(e) => handleInputChange("latitude", e.target.value)}
-                className="mt-1"
+                className="mt-1 h-10 md:h-9"
                 disabled={isLoading}
               />
             </div>
@@ -180,7 +189,7 @@ export default function SimulatorControls({
                 step="0.0001"
                 value={formData.longitude}
                 onChange={(e) => handleInputChange("longitude", e.target.value)}
-                className="mt-1"
+                className="mt-1 h-10 md:h-9"
                 disabled={isLoading}
               />
             </div>
@@ -449,6 +458,8 @@ export default function SimulatorControls({
                     onClick={() => removeWindOverride(idx)}
                     disabled={isLoading}
                     className="p-2 hover:bg-destructive/20 rounded transition-colors"
+                    title="Remove wind override"
+                    aria-label="Remove wind override"
                   >
                     <Trash2 className="w-4 h-4 text-destructive" />
                   </button>
@@ -546,11 +557,11 @@ export default function SimulatorControls({
           onClick={handleSubmit}
           disabled={isLoading}
           size="lg"
-          className="w-full bg-primary hover:bg-primary/90"
+          className="w-full bg-primary hover:bg-primary/90 min-h-[48px] text-base md:text-sm"
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              <Loader2 className="w-5 h-5 md:w-4 md:h-4 mr-2 animate-spin" />
               Running Simulation...
             </>
           ) : (

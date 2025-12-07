@@ -114,7 +114,7 @@ export interface ConcentrationPoint {
  */
 export const POLLUTANT_DEFAULTS = {
   'PM2.5': {
-    depositonVelocity: 0.002, // m/s
+    depositionVelocity: 0.002, // m/s
     description: 'Fine particulate matter (diameter < 2.5 μm)',
   },
   'PM10': {
@@ -132,7 +132,7 @@ export const GRID_SIZES = [20, 30, 40, 50] as const;
  * Receptor height defaults and limits
  */
 export const RECEPTOR_HEIGHT = {
-  DEFAULT: 1.5, // m (breathing height)
+  DEFAULT: 50, // m (source height for plume modeling)
   MIN: 0.1,
   MAX: 100,
 };

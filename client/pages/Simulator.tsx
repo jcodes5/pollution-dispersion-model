@@ -6,15 +6,14 @@ import {
   DispersionResult,
 } from "@shared/api";
 import SimulatorControls from "@/components/SimulatorControls";
-import DispersionMap from "@/components/DispersionMap";
+import DispersionVisualization from "@/components/DispersionVisualization";
 import ConcentrationChart from "@/components/ConcentrationChart";
-import ReceptorTable from "@/components/ReceptorTable";
+import ConcentrationTable from "@/components/ConcentrationTable";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Simulator() {
   const [results, setResults] = useState<DispersionResult[]>([]);
-  const [lastParams, setLastParams] = useState<SimulationParams | null>(null);
   const { toast } = useToast();
 
   const simulateMutation = useMutation({
@@ -58,7 +57,6 @@ export default function Simulator() {
   });
 
   const handleSimulate = (params: SimulationParams) => {
-    setLastParams(params);
     simulateMutation.mutate(params);
   };
 
@@ -96,14 +94,10 @@ export default function Simulator() {
               </TabsList>
 
               <TabsContent value="visualization" className="mt-4">
-                {lastParams && (
-                  <DispersionMap
-                    results={results}
-                    latitude={lastParams.latitude}
-                    longitude={lastParams.longitude}
-                    isLoading={simulateMutation.isPending}
-                  />
-                )}
+                <DispersionVisualization
+                  results={results}
+                  isLoading={simulateMutation.isPending}
+                />
               </TabsContent>
 
               <TabsContent value="timeseries" className="mt-4">
@@ -114,7 +108,7 @@ export default function Simulator() {
               </TabsContent>
 
               <TabsContent value="table" className="mt-4">
-                <ReceptorTable
+                <ConcentrationTable
                   results={results}
                   isLoading={simulateMutation.isPending}
                 />
