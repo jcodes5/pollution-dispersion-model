@@ -14,6 +14,10 @@ import HowToUse from "./pages/HowToUse";
 import Documentation from "./pages/Documentation";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
+import APIReference from "./pages/APIReference";
+import HelpCenter from "./pages/HelpCenter";
+import StatusPage from "./pages/StatusPage";
+import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +37,10 @@ function App() {
               <Route path="/how-to-use" element={<HowToUse />} />
               <Route path="/documentation" element={<Documentation />} />
               <Route path="/faq" element={<FAQ />} />
+              <Route path="/api-reference" element={<APIReference />} />
+              <Route path="/help-center" element={<HelpCenter />} />
+              <Route path="/status" element={<StatusPage />} />
+              <Route path="/community" element={<Community />} />
               <Route path="/contact" element={<Contact />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
