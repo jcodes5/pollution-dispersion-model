@@ -23,7 +23,10 @@ export default function Home() {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row pt-4">
                 <Link to="/simulator">
-                  <Button size="lg" className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200">
+                  <Button
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200"
+                  >
                     Launch Simulator
                   </Button>
                 </Link>
@@ -42,17 +45,13 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center justify-center">
-              <div className="relative w-full max-w-md h-80 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 opacity-30">
-                  <div className="absolute top-10 left-10 w-32 h-32 bg-primary/30 rounded-full blur-3xl animate-pulse" />
-                  <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/30 rounded-full blur-3xl animate-pulse" />
-                </div>
-                <div className="relative z-10 text-center">
-                  <Wind className="w-24 h-24 mx-auto text-primary mb-4" />
-                  <p className="text-foreground font-semibold">
-                    Dispersion Analysis
-                  </p>
-                </div>
+              <div className="relative w-full max-w-md h-80 rounded-2xl flex items-center justify-center overflow-hidden shadow-2xl">
+                <img
+                  src="/hero-dispersion.png"
+                  alt="Pollution dispersion visualization showing heat map pattern"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
             </div>
           </div>
@@ -60,17 +59,15 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section
-        id="features"
-        className="w-full py-20 md:py-32 bg-muted/20"
-      >
+      <section id="features" className="w-full py-20 md:py-32 bg-muted/20">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
               Powerful Features
             </h2>
             <p className="max-w-2xl text-xl text-muted-foreground leading-relaxed">
-              Everything you need to model and visualize pollutant dispersion patterns with precision
+              Everything you need to model and visualize pollutant dispersion
+              patterns with precision
             </p>
           </div>
 
@@ -85,7 +82,8 @@ export default function Home() {
                   Real-Time Weather
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Automatic meteorological data from Open-Meteo API with hourly wind speed, direction, and temperature forecasts
+                  Automatic meteorological data from Open-Meteo API with hourly
+                  wind speed, direction, and temperature forecasts
                 </p>
               </div>
             </div>
@@ -100,7 +98,8 @@ export default function Home() {
                   Gaussian Plume Model
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Industry-standard dispersion modeling based on Gaussian plume theory with stability class corrections
+                  Industry-standard dispersion modeling based on Gaussian plume
+                  theory with stability class corrections
                 </p>
               </div>
             </div>
@@ -115,7 +114,8 @@ export default function Home() {
                   Visual Mapping
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Interactive 2D visualization of dispersion plumes with color-coded concentration levels
+                  Interactive 2D visualization of dispersion plumes with
+                  color-coded concentration levels
                 </p>
               </div>
             </div>
@@ -130,7 +130,8 @@ export default function Home() {
                   Time-Series Analytics
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Track concentration changes over 1-48 hours with interactive charts and detailed statistics
+                  Track concentration changes over 1-48 hours with interactive
+                  charts and detailed statistics
                 </p>
               </div>
             </div>
@@ -145,7 +146,8 @@ export default function Home() {
                   Fast Processing
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Server-side computation for instant simulation results without browser lag or performance issues
+                  Server-side computation for instant simulation results without
+                  browser lag or performance issues
                 </p>
               </div>
             </div>
@@ -160,7 +162,8 @@ export default function Home() {
                   Customizable Inputs
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">
-                  Full control over emission rate, source height, stability class, and wind parameters
+                  Full control over emission rate, source height, stability
+                  class, and wind parameters
                 </p>
               </div>
             </div>
@@ -182,35 +185,46 @@ export default function Home() {
               {
                 step: "01",
                 title: "Input Parameters",
-                description: "Enter emission rate, source height, stability class, and location",
+                description:
+                  "Enter emission rate, source height, stability class, and location",
               },
               {
                 step: "02",
                 title: "Fetch Weather",
-                description: "Automatically retrieve 48-hour meteorological forecast data",
+                description:
+                  "Automatically retrieve 48-hour meteorological forecast data",
               },
               {
                 step: "03",
                 title: "Calculate Dispersion",
-                description: "Run Gaussian plume model for each hourly forecast step",
+                description:
+                  "Run Gaussian plume model for each hourly forecast step",
               },
               {
                 step: "04",
                 title: "Visualize Results",
-                description: "View animated dispersion maps and concentration charts",
+                description:
+                  "View animated dispersion maps and concentration charts",
               },
             ].map((item, index) => (
-              <div key={item.step} className="flex flex-col space-y-6 text-center">
+              <div
+                key={item.step}
+                className="flex flex-col space-y-6 text-center"
+              >
                 <div className="relative">
                   <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-                    <span className="text-2xl font-light text-primary">{item.step}</span>
+                    <span className="text-2xl font-light text-primary">
+                      {item.step}
+                    </span>
                   </div>
                   {index < 3 && (
                     <div className="hidden md:block absolute top-8 left-full w-full h-px bg-border transform -translate-x-8" />
                   )}
                 </div>
                 <div className="space-y-3">
-                  <h3 className="text-xl font-semibold text-foreground">{item.title}</h3>
+                  <h3 className="text-xl font-semibold text-foreground">
+                    {item.title}
+                  </h3>
                   <p className="text-muted-foreground leading-relaxed">
                     {item.description}
                   </p>
@@ -230,11 +244,15 @@ export default function Home() {
                 Ready to Simulate?
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Start modeling pollutant dispersion with our advanced simulator. No setup required — begin immediately.
+                Start modeling pollutant dispersion with our advanced simulator.
+                No setup required — begin immediately.
               </p>
             </div>
             <Link to="/simulator">
-              <Button size="lg" className="px-10 py-6 text-lg font-medium bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200">
+              <Button
+                size="lg"
+                className="px-10 py-6 text-lg font-medium bg-primary hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200"
+              >
                 Launch Simulator Now
               </Button>
             </Link>
