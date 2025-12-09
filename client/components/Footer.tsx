@@ -19,7 +19,9 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-muted-foreground mb-6 leading-relaxed max-w-sm">
-              Advanced air quality modeling made accessible to everyone. Forecast pollutant spread with precision using Gaussian plume modeling and real-time meteorological data.
+              Advanced air quality modeling made accessible to everyone.
+              Forecast pollutant spread with precision using Gaussian plume
+              modeling and real-time meteorological data.
             </p>
             <div className="flex gap-4">
               <a
@@ -45,9 +47,7 @@ export default function Footer() {
 
           {/* Product */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">
-              Product
-            </h3>
+            <h3 className="font-semibold text-foreground mb-4">Product</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link to="/" className="hover:text-primary transition-colors">
@@ -75,9 +75,7 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">
-              Resources
-            </h3>
+            <h3 className="font-semibold text-foreground mb-4">Resources</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link
@@ -104,10 +102,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="hover:text-primary transition-colors"
-                >
+                <a href="api-reference" className="hover:text-primary transition-colors">
                   API Reference
                 </a>
               </li>
@@ -116,9 +111,7 @@ export default function Footer() {
 
           {/* Support */}
           <div>
-            <h3 className="font-semibold text-foreground mb-4">
-              Support
-            </h3>
+            <h3 className="font-semibold text-foreground mb-4">Support</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li>
                 <Link
@@ -129,26 +122,17 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="hover:text-primary transition-colors"
-                >
+                <a href="/help-center" className="hover:text-primary transition-colors">
                   Help Center
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="hover:text-primary transition-colors"
-                >
+                <a href="status" className="hover:text-primary transition-colors">
                   Status Page
                 </a>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="hover:text-primary transition-colors"
-                >
+                <a href="community" className="hover:text-primary transition-colors">
                   Community
                 </a>
               </li>
@@ -158,14 +142,14 @@ export default function Footer() {
 
         <div className="border-t border-border/50 mt-12 pt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} DispersionSim. All rights reserved.
+            © {currentYear} PDS. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <span>Powered by Open-Meteo</span>
             <span>•</span>
             <span>Gaussian Plume Theory</span>
             <span>•</span>
-            <span>Built with React & TypeScript</span>
+            <span>Built with Love by Jcodes</span>
           </div>
         </div>
       </div>

@@ -63,10 +63,10 @@ export default function Contact() {
                 For general inquiries and support
               </p>
               <a
-                href="mailto:support@dispersionsim.com"
+                href="mailto:jattodare002@gmail.com"
                 className="text-primary font-semibold hover:underline"
               >
-                support@dispersionsim.com
+                jattodare002@gmail.com
               </a>
             </Card>
 
@@ -83,7 +83,7 @@ export default function Contact() {
                 rel="noopener noreferrer"
                 className="text-primary font-semibold hover:underline"
               >
-                github.com/dispersionsim
+                github.com
               </a>
             </Card>
 
