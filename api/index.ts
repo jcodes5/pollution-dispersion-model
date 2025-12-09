@@ -1,8 +1,16 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { createServer } from "../server";
 
-const app = createServer();
+let app: ReturnType<typeof createServer> | null = null;
+
+function initializeApp() {
+  if (!app) {
+    app = createServer();
+  }
+  return app;
+}
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
-  return app(req, res);
+  const application = initializeApp();
+  return application(req, res);
 }
