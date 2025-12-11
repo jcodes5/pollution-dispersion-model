@@ -11,7 +11,6 @@ import { getCachedForecast, setCachedForecast } from "../utils/forecast-cache";
 
 export const handleSimulate: RequestHandler = async (req, res) => {
   try {
-    console.log("=== Simulation Request Started ===");
     const params = req.body as SimulationParams;
 
     console.log("Received simulation params:", params);
@@ -135,20 +134,17 @@ export const handleSimulate: RequestHandler = async (req, res) => {
     let forecastData: MeteoDataPoint[];
 
     if (params.useAutoWeather) {
-      console.log("Fetching auto weather data...");
       // Check cache first
       forecastData = getCachedForecast(params.latitude, params.longitude);
 
       if (!forecastData) {
         // Cache miss - fetch from API
         try {
-          console.log("Cache miss, fetching from Open-Meteo API...");
           forecastData = await fetchForecast(
             params.latitude,
             params.longitude,
             params.duration,
           );
-          console.log("Got forecast data, points:", forecastData.length);
           // Store in cache
           setCachedForecast(params.latitude, params.longitude, forecastData);
         } catch (error) {
@@ -156,11 +152,8 @@ export const handleSimulate: RequestHandler = async (req, res) => {
           // Fall back to mock data
           forecastData = generateMockForecast(params.duration);
         }
-      } else {
-        console.log("Using cached forecast data");
       }
     } else {
-      console.log("Using manual weather input");
       // Use manual wind input or override
       if (
         typeof params.windSpeed !== "number" ||
@@ -239,24 +232,13 @@ export const handleSimulate: RequestHandler = async (req, res) => {
       lossRate,
     );
 
-    console.log("Simulation completed successfully");
-    console.log("Results count:", simulation.results.length);
-    console.log("Peak concentration:", simulation.stats.peakConcentration);
-
     return res.status(200).json({
       success: true,
       results: simulation.results,
       stats: simulation.stats,
     } as SimulationResponse);
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : undefined;
-    console.error("Simulation error:", errorMessage);
-    if (errorStack) {
-      console.error("Stack trace:", errorStack);
-    }
-    console.error("Full error object:", error);
-
+    console.error("Simulation error:", error);
     return res.status(500).json({
       success: false,
       results: [],
@@ -266,7 +248,7 @@ export const handleSimulate: RequestHandler = async (req, res) => {
         peakHour: 0,
         averageConcentration: 0,
       },
-      error: `Failed to run simulation: ${errorMessage}`,
+      error: "Failed to run simulation",
     } as SimulationResponse);
   }
 };
