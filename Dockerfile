@@ -8,16 +8,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN pnpm install
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN pnpm build
 
 # Expose port
 EXPOSE 10000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]
