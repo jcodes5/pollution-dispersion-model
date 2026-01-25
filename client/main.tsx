@@ -19,35 +19,38 @@ import HelpCenter from "./pages/HelpCenter";
 import StatusPage from "./pages/StatusPage";
 import Community from "./pages/Community";
 import NotFound from "./pages/NotFound";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/simulator" element={<Simulator />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/how-to-use" element={<HowToUse />} />
-              <Route path="/documentation" element={<Documentation />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/api-reference" element={<APIReference />} />
-              <Route path="/help-center" element={<HelpCenter />} />
-              <Route path="/status" element={<StatusPage />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/contact" element={<Contact />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </TooltipProvider>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/simulator" element={<Simulator />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/how-to-use" element={<HowToUse />} />
+                <Route path="/documentation" element={<Documentation />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/api-reference" element={<APIReference />} />
+                <Route path="/help-center" element={<HelpCenter />} />
+                <Route path="/status" element={<StatusPage />} />
+                <Route path="/community" element={<Community />} />
+                <Route path="/contact" element={<Contact />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Layout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

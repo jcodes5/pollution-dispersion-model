@@ -3,12 +3,13 @@ import { Wind, ChevronDown, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface HeaderProps {
-  currentPath?: string;
+  currentPath: string;
 }
 
-export default function Header({ currentPath = "/" }: HeaderProps) {
+export default function Header({ currentPath }: HeaderProps) {
   const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -106,6 +107,9 @@ export default function Header({ currentPath = "/" }: HeaderProps) {
               </div>
             )}
           </div>
+          
+          {/* Theme Toggle */}
+          <ThemeToggle />
         </nav>
 
         {/* Mobile Menu Button */}
@@ -125,7 +129,7 @@ export default function Header({ currentPath = "/" }: HeaderProps) {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl">
-          <nav className="container px-4 py-4 space-y-2">
+          <nav className="container px-4 py-4 space-y-2 flex flex-col">
             {navItems.map((item) => (
               <Link
                 key={item.path}
@@ -162,6 +166,11 @@ export default function Header({ currentPath = "/" }: HeaderProps) {
                   {item.label}
                 </Link>
               ))}
+            </div>
+            
+            {/* Theme Toggle for Mobile */}
+            <div className="pt-2 border-t border-border/50 flex justify-center">
+              <ThemeToggle />
             </div>
           </nav>
         </div>
